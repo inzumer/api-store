@@ -7,4 +7,5 @@ import { PaypalController } from './paypal.controller';
   controllers: [PaypalController],
   exports: [PaypalService],
 })
-export class PaypalModule {} 
+
+export class PaypalModule {}

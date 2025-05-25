@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { PaypalService } from './paypal.service';
 
 @Controller('paypal')
@@ -7,7 +7,8 @@ export class PaypalController {
 
   @Post('create-order')
   async createOrder(
-    @Body() orderData: {
+    @Body()
+    orderData: {
       amount: number;
       currency: string;
       description: string;
@@ -20,9 +21,4 @@ export class PaypalController {
   async captureOrder(@Param('orderId') orderId: string) {
     return this.paypalService.captureOrder(orderId);
   }
-
-  @Get('order/:orderId')
-  async getOrder(@Param('orderId') orderId: string) {
-    return this.paypalService.getOrder(orderId);
-  }
-} 
+}

@@ -1,70 +1,100 @@
 import { Injectable } from '@nestjs/common';
-import * as paypal from '@paypal/paypal-server-sdk';
+import {
+  ApiError,
+  CheckoutPaymentIntent,
+  Client,
+  Environment,
+  LogLevel,
+  OrdersController,
+} from '@paypal/paypal-server-sdk';
+
+const client = new Client({
+  clientCredentialsAuthCredentials: {
+    oAuthClientId: process.env.PAYPAL_CLIENT_ID ?? '',
+    oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET ?? '',
+  },
+  timeout: 0,
+  environment: Environment.Sandbox,
+  logging: {
+    logLevel: LogLevel.Info,
+    logRequest: {
+      logBody: true,
+    },
+    logResponse: {
+      logHeaders: true,
+    },
+  },
+});
+
+const ordersController = new OrdersController(client);
 
 @Injectable()
 export class PaypalService {
-  private paypalClient: paypal.core.PayPalHttpClient;
-
-  constructor() {
-    const environment = process.env.NODE_ENV === 'production'
-      ? new paypal.core.LiveEnvironment(
-          process.env.PAYPAL_CLIENT_ID,
-          process.env.PAYPAL_CLIENT_SECRET
-        )
-      : new paypal.core.SandboxEnvironment(
-          process.env.PAYPAL_CLIENT_ID,
-          process.env.PAYPAL_CLIENT_SECRET
-        );
-
-    this.paypalClient = new paypal.core.PayPalHttpClient(environment);
-  }
+  constructor() {}
 
   async createOrder(orderData: {
     amount: number;
     currency: string;
     description: string;
   }) {
-    const request = new paypal.orders.OrdersCreateRequest();
-    request.prefer("return=representation");
-    request.requestBody({
-      intent: 'CAPTURE',
-      purchase_units: [{
-        amount: {
-          currency_code: orderData.currency,
-          value: orderData.amount.toString(),
-        },
-        description: orderData.description,
-      }],
-    });
+    const { amount, currency, description } = orderData;
+    const amountValue = amount.toString();
+    console.log(amountValue);
+    console.log(currency);
+    console.log(description);
+
+    const collect = {
+      body: {
+        intent: CheckoutPaymentIntent.Capture,
+        purchaseUnits: [
+          {
+            amount: {
+              currencyCode: 'USD',
+              value: '100.00',
+            },
+          },
+        ],
+      },
+      prefer: 'return=minimal',
+    };
 
     try {
-      const order = await this.paypalClient.execute(request);
-      return order.result;
-    } catch (err) {
-      throw new Error(`Error creating PayPal order: ${err.message}`);
+      const { body, ...httpResponse } =
+        await ordersController.createOrder(collect);
+      // Get more response info...
+      // const { statusCode, headers } = httpResponse;
+      return {
+        jsonResponse: body,
+        httpStatusCode: httpResponse.statusCode,
+      };
+    } catch (error) {
+      if (error instanceof ApiError) {
+        // const { statusCode, headers } = error;
+        throw new Error(error.message);
+      }
     }
   }
 
   async captureOrder(orderId: string) {
-    const request = new paypal.orders.OrdersCaptureRequest(orderId);
-    request.requestBody({});
+    const collect = {
+      id: orderId,
+      prefer: 'return=minimal',
+    };
 
     try {
-      const capture = await this.paypalClient.execute(request);
-      return capture.result;
-    } catch (err) {
-      throw new Error(`Error capturing PayPal order: ${err.message}`);
+      const { body, ...httpResponse } =
+        await ordersController.captureOrder(collect);
+      // Get more response info...
+      // const { statusCode, headers } = httpResponse;
+      return {
+        jsonResponse: body,
+        httpStatusCode: httpResponse.statusCode,
+      };
+    } catch (error) {
+      if (error instanceof ApiError) {
+        // const { statusCode, headers } = error;
+        throw new Error(error.message);
+      }
     }
   }
-
-  async getOrder(orderId: string) {
-    const request = new paypal.orders.OrdersGetRequest(orderId);
-
-    try {
-      const order = await this.paypalClient.execute(request);
-      return order.result;
-    } catch (err) {
-      throw new Error(`Error getting PayPal order: ${err.message}`);
-    }
-  }
-} 
+}
