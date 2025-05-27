@@ -3,9 +3,21 @@
 
 /** DTO */
 import { UserDto, EmailUserDto, LoginUserDto, IdUserDto } from './dto';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Injectable } from '@nestjs/common';
+import { Connection } from 'mongoose';
 
+import { Users } from './schema/users.schema';
+
+@Injectable()
 export class UserService {
-  constructor() {}
+  constructor(@InjectConnection() private readonly connection: Connection) {}
+
+  async startTransaction() {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    // Your transaction logic here
+  }
 
   /**
    * Creates a new user.
@@ -14,9 +26,15 @@ export class UserService {
    * @throws An error if the request fails or the DB returns an error.
    */
   async createUser(data: UserDto) {
+    console.log(data);
+
+     const createdUser = new this.UsersSchema(createUserDto);
+    return createdUser.save(); // Guarda en MongoDB
+
+
     // const hash: string = await bcrypt.hash(data.password, 10);
 
-    function delay(ms: number) {
+    /* function delay(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
@@ -31,7 +49,7 @@ export class UserService {
       };
     } catch (error) {
       throw new Error('Error creating user:', error);
-    }
+    } */
   }
 
   /**
