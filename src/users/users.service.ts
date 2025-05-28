@@ -3,34 +3,23 @@
 
 /** DTO */
 import { UserDto, EmailUserDto, LoginUserDto, IdUserDto } from './dto';
-import { InjectConnection } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
 import { Injectable } from '@nestjs/common';
-import { Connection } from 'mongoose';
 
 import { Users } from './schema/users.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectConnection() private readonly connection: Connection) {}
+  constructor(@InjectModel('Users') private readonly userModel: Model<Users>) {}
 
-  async startTransaction() {
-    const session = await this.connection.startSession();
-    session.startTransaction();
-    // Your transaction logic here
-  }
-
-  /**
-   * Creates a new user.
-   * @param data - The user data to create of type CreateUserDto.
-   * @returns status of creation.
-   * @throws An error if the request fails or the DB returns an error.
-   */
   async createUser(data: UserDto) {
-    console.log(data);
+    console.log({ data });
 
-     const createdUser = new this.UsersSchema(createUserDto);
+    const createdUser = new this.userModel(data);
+    console.log(createdUser);
     return createdUser.save(); // Guarda en MongoDB
-
 
     // const hash: string = await bcrypt.hash(data.password, 10);
 

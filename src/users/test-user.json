@@ -1,0 +1,13 @@
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "1234567890",
+  "role": "user",
+  "profile_photo": "https://example.com/profile.jpg",
+  "birthday": "1990-01-01",
+  "gender": "Male",
+  "address": "123 Main Street, City, Country",
+  "user_state": false,
+  "is_active": true
+} 

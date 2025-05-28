@@ -1,40 +1,65 @@
-import { IsDefined, IsEmail, MinLength, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  IsEnum,
+  IsDate,
+  IsBoolean,
+  IsOptional,
+  MaxLength,
+  Matches,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-type UserRole = 'admin' | 'user' | 'guest';
+export type UserRole = 'admin' | 'user' | 'guest';
+export type UserGender = 'Female' | 'Male' | 'Other';
 
 export class UserDto {
-  @IsDefined()
-  id: string;
+  @IsString()
+  @MaxLength(50)
+  first_name: string;
+
+  @IsString()
+  @MaxLength(50)
+  last_name: string;
 
   @IsEmail()
+  @MaxLength(60)
   email: string;
 
-  @MinLength(8)
-  @MaxLength(24)
-  password: string;
+  @IsString()
+  @MaxLength(15)
+  @Matches(/^[0-9]+$/, { message: 'Phone must contain only numbers' })
+  phone: string;
 
-  @IsDefined()
-  role: UserRole;
+  @IsEnum(['admin', 'user', 'guest'])
+  @IsOptional()
+  role?: UserRole = 'user';
 
-  @MinLength(2, { message: 'Name is too short' })
-  @MaxLength(30, { message: 'Name is too long' })
-  name: string;
+  @IsString()
+  @MaxLength(500)
+  @IsOptional()
+  profile_photo?: string;
 
-  @MinLength(2, { message: 'Lastname is too short' })
-  @MaxLength(30, { message: 'Lastname is too long' })
-  lastname: string;
+  @IsDate()
+  @Type(() => Date)
+  birthday: Date;
 
-  img?: string;
+  @IsEnum(['Female', 'Male', 'Other'])
+  gender: UserGender;
+
+  @IsString()
+  @MaxLength(100)
+  address: string;
+
+  @IsBoolean()
+  @IsOptional()
+  user_state?: boolean = false;
+
+  @IsBoolean()
+  @IsOptional()
+  is_active?: boolean = true;
 }
 
-export type IdUserDto = Pick<UserDto, 'id'>;
-
-export type EmailUserDto = Pick<UserDto, 'email'>;
-
-export type PasswordUserDto = Pick<UserDto, 'password'>;
-
-export type RoleUserDto = Pick<UserDto, 'role'>;
-
-export type NameUserDto = Pick<UserDto, 'name'>;
-
-export type LoginUserDto = Pick<UserDto, 'email' | 'password'>;
+export type IdUserDto = { id: string };
+export type EmailUserDto = { email: string };
+export type LoginUserDto = { email: string; password: string };

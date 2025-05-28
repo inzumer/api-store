@@ -4,14 +4,15 @@ import { ProductModule } from './product';
 import { SearchModule } from './search';
 import { UsersModule } from './users';
 import { MongooseModule } from '@nestjs/mongoose';
-
-const MONGO_USER = process.env.MONGO_USER;
-const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(
-      `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@mateandmethods.2q3ycr1.mongodb.net/?retryWrites=true&w=majority&appName=MateAndMethods`,
+      `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@mateandmethods.2q3ycr1.mongodb.net/api-store?retryWrites=true&w=majority`,
     ),
     AuthModule,
     ProductModule,
