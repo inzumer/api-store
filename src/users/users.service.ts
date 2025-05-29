@@ -1,5 +1,5 @@
 /** Resources */
-// import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 /** DTO */
 import { UserDto, EmailUserDto, LoginUserDto, IdUserDto } from './dto';
@@ -17,28 +17,18 @@ export class UserService {
   async createUser(data: UserDto) {
     console.log({ data });
 
-    const createdUser = new this.userModel(data);
-    console.log(createdUser);
-    return createdUser.save(); // Guarda en MongoDB
-
-    // const hash: string = await bcrypt.hash(data.password, 10);
-
-    /* function delay(ms: number) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    await delay(1000);
-
-    const hash = 'hashed_password';
+    const hash: string = await bcrypt.hash(data.password, 10);
 
     try {
-      return {
+      const createdUser = new this.userModel({
         ...data,
-        password: hash,
-      };
+        hash,
+      });
+      console.log(createdUser);
+      return createdUser.save(); // Guarda en MongoDB
     } catch (error) {
       throw new Error('Error creating user:', error);
-    } */
+    }
   }
 
   /**

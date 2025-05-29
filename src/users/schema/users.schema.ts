@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type UsersDocument = HydratedDocument<Users>;
 
 @Schema()
 export class Users {
   @Prop({ required: true, maxlength: 50 })
-  first_name: string;
+  name: string;
 
   @Prop({ required: true, maxlength: 50 })
   last_name: string;
@@ -16,6 +16,9 @@ export class Users {
 
   @Prop({ required: true, maxlength: 15 })
   phone: string;
+
+  @Prop({ required: true, maxlength: 15 })
+  password: string;
 
   @Prop({ enum: ['admin', 'user', 'guest'], default: 'user' })
   role: string;
@@ -29,8 +32,14 @@ export class Users {
   @Prop({ required: true, enum: ['Female', 'Male', 'Other'] })
   gender: string;
 
-  @Prop({ required: true, maxlength: 100 })
-  address: string;
+  @Prop({ type: Types.ObjectId, ref: 'Address', required: true })
+  address_id: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'Preferences' })
+  preferencies_id: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'SocialNetwork' })
+  socil_network_id: Types.ObjectId;
 
   @Prop({ default: false })
   user_state: boolean;
