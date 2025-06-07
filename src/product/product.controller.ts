@@ -1,40 +1,235 @@
+/** Nest */
 import {
   Controller,
   Get,
   Post,
-  Patch,
+  Put,
   Delete,
   Body,
   Param,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
 
+/** Swagger */
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiBody,
+} from '@nestjs/swagger';
+
+/** Commons */
+import { ApiCommonError } from '../common/decorators/swagger.decorators';
+import {
+  PartialProductExample,
+  ProductExample,
+  SoftDeleteExample,
+  UpdateProductExample,
+} from '../common/examples/product.example';
+
+/** Product dependencies */
+import { ProductService } from './product.service';
+import { ProductDto } from './dto/product.dto';
+
+@ApiTags('Products')
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get('/')
-  hello() {
-    return 'Hello World!';
-  }
-
   @Post('/create')
-  create(@Body('product') product: string) {
+  @ApiOperation({ summary: 'Create a new product' })
+  @ApiBody({
+    type: ProductDto,
+    required: true,
+    description: 'Product data to be created',
+    examples: {
+      validRequest: {
+        summary: 'Valid request example',
+        description: 'A typical product creation payload',
+        value: PartialProductExample,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Product created successfully',
+    schema: {
+      example: ProductExample,
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation failed',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: ['name must be a string', 'price must be a number'],
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Category not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'Category not found',
+        error: 'Not Found',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User owner not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'User owner found',
+        error: 'Not Found',
+      },
+    },
+  })
+  createProduct(@Body() product: ProductDto) {
     return this.productService.createProduct(product);
   }
 
-  @Get('/read')
-  read(@Body('product') product: string) {
-    return this.productService.getProduct(product);
+  @Get('/get-by-id/:id')
+  @ApiOperation({ summary: 'Get product by ID' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Product ID',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Product retrieved successfully',
+    schema: {
+      example: ProductExample,
+    },
+  })
+  @ApiCommonError('Product')
+  gettById(@Param('id') id: string) {
+    return this.productService.getProductById(id);
   }
 
-  @Patch('/update')
-  update(@Body('product') product: string) {
-    return this.productService.updateProduct(product);
+  @Get('/get-by-name/:name')
+  @ApiOperation({ summary: 'Get product by name' })
+  @ApiParam({ name: 'name', type: String, description: 'Product name' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product retrieved successfully',
+    schema: {
+      example: [ProductExample],
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product with name not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'Product with name not found',
+        error: 'Not Found',
+      },
+    },
+  })
+  getByName(@Param('name') name: string) {
+    return this.productService.findByName(name);
   }
 
   @Delete('/delete/:id')
-  delete(@Param('id') id: string) {
+  @ApiOperation({ summary: 'Permanently delete a product by ID' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Product ID',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Product deleted successfully',
+    schema: {
+      example: {
+        message: 'Product deleted successfully',
+      },
+    },
+  })
+  @ApiCommonError('Product')
+  deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
+  }
+
+  @Put('/soft-delete/:id')
+  @ApiOperation({ summary: 'Soft delete a product (sets is_active to false)' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Product ID',
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Product soft-deleted successfully',
+    schema: {
+      example: SoftDeleteExample,
+    },
+  })
+  @ApiCommonError('Product')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async softDelete(@Param('id') id: string) {
+    return this.productService.softDeleteProduct(id);
+  }
+
+  @Put('/update/:id')
+  @ApiOperation({ summary: 'Update product by ID' })
+  @ApiParam({ name: 'id', type: String, description: 'Product ID' })
+  @ApiBody({
+    type: ProductDto,
+    description: 'Partial update data',
+    required: true,
+    examples: {
+      validRequest: {
+        summary: 'Valid request example',
+        description: 'A typical product updated payload',
+        value: {
+          description: 'Update description for the product.',
+          stock: 100,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Product updated successfully',
+    schema: {
+      example: UpdateProductExample,
+    },
+  })
+  @ApiCommonError('Product')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() updateData: Partial<ProductDto>,
+  ) {
+    return this.productService.updateProduct(id, updateData);
+  }
+
+  @Get('/get-by-category/:id')
+  @ApiOperation({ summary: 'Get all products by category ID' })
+  @ApiParam({ name: 'id', type: String, description: 'Category ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Products retrieved successfully',
+    schema: {
+      example: [ProductExample],
+    },
+  })
+  @ApiCommonError('Category')
+  async getProductsByCategory(@Param('id') id: string) {
+    return this.productService.getProductsByCategory(id);
   }
 }
