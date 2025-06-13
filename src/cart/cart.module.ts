@@ -1,16 +1,16 @@
-/** Nest */
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-
 /** Cart dependencies */
 import { CartController } from './cart.controller';
 import { CartService } from './cart.service';
 
-/** User dependencies */
+/** Schema */
 import { User, UserSchema } from '../user/schema/user.schema';
-
-/** Product dependencies */
 import { Product, ProductSchema } from '../product/schema/product.schema';
+
+/** Nest */
+import { Module } from '@nestjs/common';
+
+/** Mongoose */
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [

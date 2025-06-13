@@ -1,3 +1,10 @@
+/** Nest */
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+
 /** Schema */
 import { User, UserDocument } from '../user/schema';
 import { Product, ProductDocument } from '../product/schema';
@@ -7,45 +14,33 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
 /** Services */
-import { UserService } from '../user';
-
-/** DTO */
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { UserService } from '../user/user.service';
 
 @Injectable()
-export class CartService extends UserService {
+export class CartService {
   constructor(
-    @InjectModel(User.name) userModel: Model<UserDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
-  ) {
-    super(userModel);
-  }
+    private readonly userService: UserService,
+  ) {}
 
   /**
    * Retrieves the list of products in a user's cart.
    * @param userId - The user's ID.
    * @returns An array of products in the cart.
-   * @throws BadRequestException if a query error occurs.
    */
   async getCart(userId: string): Promise<Product[]> {
     try {
-      this.validateMongoId(userId);
+      this.userService.validateMongoId(userId);
 
       const user = await this.userModel
         .findById(userId)
         .populate('cart')
         .exec();
 
-      console.log('User Cart:', user?.cart);
-
       const cartIds = user?.cart;
 
       if (!cartIds || cartIds.length === 0) {
-        console.log('Cart is empty');
         return [];
       }
 
@@ -68,7 +63,6 @@ export class CartService extends UserService {
    * @param quantity - The quantity to add.
    * @returns The updated user with the modified cart.
    * @throws NotFoundException if the product does not exist.
-   * @throws BadRequestException if a query error occurs.
    */
   async addToCart(
     userId: string,
@@ -76,10 +70,10 @@ export class CartService extends UserService {
     quantity: number,
   ): Promise<User> {
     try {
-      this.validateMongoId(userId);
-      this.validateMongoId(productId);
+      this.userService.validateMongoId(userId);
+      this.userService.validateMongoId(productId);
 
-      const user = await this.userModel.findById(userId);
+      const user = await this.userService.findById(userId);
 
       const productExists = await this.productModel.exists({ _id: productId });
 
@@ -114,12 +108,11 @@ export class CartService extends UserService {
    * @param userId - The user's ID.
    * @param productId - The product ID to remove.
    * @returns The updated user with the modified cart.
-   * @throws BadRequestException if a query error occurs.
    */
   async removeFromCart(userId: string, productId: string): Promise<User> {
     try {
-      this.validateMongoId(userId);
-      this.validateMongoId(productId);
+      this.userService.validateMongoId(userId);
+      this.userService.validateMongoId(productId);
 
       const updatedUser = await this.userModel.findByIdAndUpdate(
         userId,
@@ -147,14 +140,14 @@ export class CartService extends UserService {
     quantity: number,
   ): Promise<User> {
     try {
-      this.validateMongoId(userId);
-      this.validateMongoId(productId);
+      this.userService.validateMongoId(userId);
+      this.userService.validateMongoId(productId);
 
       if (quantity <= 0) {
         throw new BadRequestException('Quantity must be greater than 0');
       }
 
-      const user = await this.userModel.findById(userId);
+      const user = await this.userService.findById(userId);
 
       const index = user?.cart.findIndex(
         (item) => item.productId.toString() === productId,

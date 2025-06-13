@@ -8,7 +8,6 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { ApiCommonError } from '../common/decorators/swagger.decorators';
 import { CartExample } from '../common/examples/cart.example';
 import {
   UserCartExample,
@@ -37,7 +36,6 @@ export class CartController {
       example: UserCartExample,
     },
   })
-  @ApiCommonError('Cart')
   async addProductToCart(
     @Param('userId') userId: string,
     @Body('productId') productId: string,
@@ -65,7 +63,6 @@ export class CartController {
       example: UserCartEmptyExample,
     },
   })
-  @ApiCommonError('Cart')
   async removeProductFromCart(
     @Param('userId') userId: string,
     @Body('productId') productId: string,
@@ -81,7 +78,6 @@ export class CartController {
     description: 'Cart retrieved successfully',
     example: UserCartExample,
   })
-  @ApiCommonError('Cart')
   async getCart(@Param('userId') userId: string) {
     return this.cartService.getCart(userId);
   }
@@ -99,7 +95,6 @@ export class CartController {
       example: UserCartExample,
     },
   })
-  @ApiCommonError('Cart')
   async updateCart(
     @Param('userId') userId: string,
     @Body('productId') productId: string,
