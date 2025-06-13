@@ -1,5 +1,6 @@
-/** Class validator */
-import { isMongoId } from 'class-validator';
+/** Schema */
+import { Category, CategoryDocument } from '../category/schema/category.schema';
+import { Product, ProductDocument } from '../product/schema/product.schema';
 
 /** Mongoose */
 import { Model } from 'mongoose';
@@ -8,11 +9,8 @@ import { InjectModel } from '@nestjs/mongoose';
 /** Nest */
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
-/** Category schema */
-import { Category, CategoryDocument } from '../category/schema/category.schema';
-
-/** Product schema */
-import { Product, ProductDocument } from '../product/schema/product.schema';
+/** Class validator */
+import { isMongoId } from 'class-validator';
 
 export class SearchService {
   constructor(
@@ -30,15 +28,19 @@ export class SearchService {
    * @returns An array of matching products.
    */
   async findByName(name: string): Promise<Product[]> {
-    const results = await this.productModel
-      .find({ name: { $regex: name, $options: 'i' } })
-      .exec();
+    try {
+      const results = await this.productModel
+        .find({ name: { $regex: name, $options: 'i' } })
+        .exec();
 
-    if (results.length === 0) {
-      throw new NotFoundException(`No products found with name "${name}"`);
+      if (results.length === 0) {
+        throw new NotFoundException(`No products found with name: "${name}"`);
+      }
+
+      return results;
+    } catch (errors) {
+      throw new BadRequestException(`${errors}`);
     }
-
-    return results;
   }
 
   /**
@@ -50,21 +52,27 @@ export class SearchService {
    * @throws NotFoundException if the category does not exist.
    */
   async getProductsByCategory(categoryId: string): Promise<Product[]> {
-    if (!isMongoId(categoryId)) {
-      throw new BadRequestException('Invalid category ID');
+    try {
+      if (!isMongoId(categoryId)) {
+        throw new BadRequestException('Invalid category ID');
+      }
+
+      const categoryExists = await this.categoryModel.exists({
+        _id: categoryId,
+      });
+
+      if (!categoryExists) {
+        throw new NotFoundException('Category not found');
+      }
+
+      const products = await this.productModel
+        .find({ category_id: categoryId, is_active: true })
+        .exec();
+
+      return products;
+    } catch (errors) {
+      throw new BadRequestException(`${errors}`);
     }
-
-    const categoryExists = await this.categoryModel.exists({ _id: categoryId });
-
-    if (!categoryExists) {
-      throw new NotFoundException('Category not found');
-    }
-
-    const products = await this.productModel
-      .find({ category_id: categoryId, is_active: true })
-      .exec();
-
-    return products;
   }
 
   /**
@@ -76,10 +84,14 @@ export class SearchService {
    * @throws NotFoundException if no products are found for the given owner.
    */
   async findByOwner(userId: string): Promise<Product[]> {
-    if (!isMongoId(userId)) {
-      throw new BadRequestException('Invalid user ID');
-    }
+    try {
+      if (!isMongoId(userId)) {
+        throw new BadRequestException('Invalid user ID');
+      }
 
-    return this.productModel.find({ owner: userId }).exec();
+      return this.productModel.find({ owner: userId }).exec();
+    } catch (errors) {
+      throw new BadRequestException(`${errors}`);
+    }
   }
 }

@@ -1,16 +1,20 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-
-import { SearchController } from './search.controller';
-import { SearchService } from './search.service';
-
+/** Schemas */
 import { Product, ProductSchema } from '../product/schema/product.schema';
 import { Category, CategorySchema } from '../category/schema/category.schema';
 import { User, UserSchema } from '../user/schema/user.schema';
 
+/** Modules */
 import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 import { CategoryModule } from '../category/category.module';
+
+/** Mongoose */
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
+/** Search Dependencies */
+import { SearchController } from './search.controller';
+import { SearchService } from './search.service';
 
 @Module({
   imports: [
