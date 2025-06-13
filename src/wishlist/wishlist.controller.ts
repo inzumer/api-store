@@ -1,6 +1,3 @@
-import { Controller, Put, Get, Param, Body } from '@nestjs/common';
-import { WishlistService } from './wishlist.service';
-
 /** Swagger */
 import {
   ApiTags,
@@ -11,12 +8,17 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { ApiCommonError } from '../common/decorators/swagger.decorators';
 import { WishlistExample } from '../common/examples/wishlist.example';
 import {
   UserWishlistEmptyExample,
   UserWishlistExample,
 } from '../common/examples/user.example';
+
+/** Nest */
+import { Controller, Put, Get, Param, Body } from '@nestjs/common';
+
+/** Whislist dependencies */
+import { WishlistService } from './wishlist.service';
 
 @ApiTags('Wishlist')
 @Controller('wishlist')
@@ -34,7 +36,6 @@ export class WishlistController {
       example: UserWishlistExample,
     },
   })
-  @ApiCommonError('Wishlist')
   async addProductToWishlist(
     @Param('userId') userId: string,
     @Body('productId') productId: string,
@@ -53,7 +54,6 @@ export class WishlistController {
       example: UserWishlistEmptyExample,
     },
   })
-  @ApiCommonError('Wishlist')
   async removeProductFromWishlist(
     @Param('userId') userId: string,
     @Body('productId') productId: string,
@@ -71,7 +71,6 @@ export class WishlistController {
       example: UserWishlistExample,
     },
   })
-  @ApiCommonError('Wishlist')
   async getWishlist(@Param('userId') userId: string) {
     return this.wishlistService.getWishlist(userId);
   }

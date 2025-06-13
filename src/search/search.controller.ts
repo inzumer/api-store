@@ -7,7 +7,7 @@ import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 /** Commons */
 import { ProductExample } from '../common/examples/product.example';
 
-/** Product dependencies */
+/** Search dependencies */
 import { SearchService } from './search.service';
 
 @ApiTags('Search')

@@ -8,13 +8,15 @@ import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 import { CategoryModule } from '../category/category.module';
 
-/** Mongoose */
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-
 /** Search Dependencies */
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
+
+/** Nest */
+import { Module } from '@nestjs/common';
+
+/** Mongoose */
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [

@@ -1,19 +1,20 @@
-/** Schema */
-import { User, UserDocument } from '../user/schema';
-import { Product, ProductDocument } from '../product/schema';
-
-/** Services */
-import { UserService } from '../user';
-
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-
-/** DTO */
+/** Nest */
 import {
   Injectable,
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+
+/** Mongoose */
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+
+/** Schema */
+import { User, UserDocument } from '../user/schema';
+import { Product, ProductDocument } from '../product/schema';
+
+/** Services */
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class WishlistService extends UserService {
