@@ -1,6 +1,3 @@
-/** Nest */
-import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
-
 /** Swagger */
 import {
   ApiTags,
@@ -11,14 +8,18 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { ApiCommonError } from '../common/decorators/swagger.decorators';
 import {
   ProductExample,
   ReviewExample,
 } from '../common/examples/product.example';
 
-/** Product dependencies */
+/** Nest */
+import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
+
+/** Review dependencies */
 import { ReviewService } from './review.service';
+
+/** DTO */
 import { ReviewDto } from './dto/review.dto';
 
 @ApiTags('Reviews')
@@ -51,7 +52,6 @@ export class ReviewController {
       example: ProductExample,
     },
   })
-  @ApiCommonError('Add review')
   async addReview(
     @Param('id') productId: string,
     @Body() review: ReviewDto,
@@ -82,7 +82,6 @@ export class ReviewController {
       example: ProductExample,
     },
   })
-  @ApiCommonError('Delete review')
   async removeReview(@Param('id') productId: string, @Body() userId: string) {
     return await this.reviewService.removeReview(productId, userId);
   }
@@ -101,7 +100,6 @@ export class ReviewController {
       example: [ReviewExample],
     },
   })
-  @ApiCommonError('All reviews')
   async getProductReviewUsers(@Param('id') productId: string) {
     return await this.reviewService.getReviews(productId);
   }

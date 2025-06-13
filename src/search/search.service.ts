@@ -1,6 +1,6 @@
 /** Schema */
-import { Category, CategoryDocument } from '../category/schema/category.schema';
-import { Product, ProductDocument } from '../product/schema/product.schema';
+import { Category, CategoryDocument } from '../category/schema';
+import { Product, ProductDocument } from '../product/schema';
 
 /** Mongoose */
 import { Model } from 'mongoose';
