@@ -146,49 +146,4 @@ export class ProductService {
       message: 'Product deleted successfully',
     };
   }
-
-  /**
-   * Searches for products by name, case-insensitive.
-   *
-   * @param name - The name or partial name to search for.
-   * @throws NotFoundException if no products are found.
-   * @returns An array of matching products.
-   */
-  async findByName(name: string): Promise<Product[]> {
-    const results = await this.productModel
-      .find({ name: { $regex: name, $options: 'i' } })
-      .exec();
-
-    if (results.length === 0) {
-      throw new NotFoundException(`No products found with name "${name}"`);
-    }
-
-    return results;
-  }
-
-  /**
-   * Retrieves products by category ID.
-   *
-   * @param categoryId - The ID of the category to retrieve products from.
-   * @returns A list of products in the specified category.
-   * @throws BadRequestException if the category ID is invalid.
-   * @throws NotFoundException if the category does not exist.
-   */
-  async getProductsByCategory(categoryId: string): Promise<Product[]> {
-    if (!isMongoId(categoryId)) {
-      throw new BadRequestException('Invalid category ID');
-    }
-
-    const categoryExists = await this.categoryModel.exists({ _id: categoryId });
-
-    if (!categoryExists) {
-      throw new NotFoundException('Category not found');
-    }
-
-    const products = await this.productModel
-      .find({ category_id: categoryId, is_active: true })
-      .exec();
-
-    return products;
-  }
 }

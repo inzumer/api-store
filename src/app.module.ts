@@ -7,11 +7,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
 /** Modules */
-import { AuthModule } from './auth';
+import { CartModule } from './cart';
 import { CategoryModule } from './category';
 import { ProductModule } from './product';
+import { ReviewModule } from './review';
 import { SearchModule } from './search';
-import { UsersModule } from './users';
+import { UserModule } from './user';
+import { WishlistModule } from './wishlist';
 
 @Module({
   imports: [
@@ -21,11 +23,13 @@ import { UsersModule } from './users';
     MongooseModule.forRoot(
       `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/${process.env.MONGO_DB}?${process.env.MONGO_OPTIONS}`,
     ),
-    AuthModule,
+    CartModule,
     CategoryModule,
     ProductModule,
+    ReviewModule,
     SearchModule,
-    UsersModule,
+    UserModule,
+    WishlistModule,
   ],
   controllers: [],
   providers: [],

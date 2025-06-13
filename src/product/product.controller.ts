@@ -116,31 +116,6 @@ export class ProductController {
     return this.productService.getProductById(id);
   }
 
-  @Get('/get-by-name/:name')
-  @ApiOperation({ summary: 'Get product by name' })
-  @ApiParam({ name: 'name', type: String, description: 'Product name' })
-  @ApiResponse({
-    status: 200,
-    description: 'Product retrieved successfully',
-    schema: {
-      example: [ProductExample],
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Product with name not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with name not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  getByName(@Param('name') name: string) {
-    return this.productService.findByName(name);
-  }
-
   @Delete('/delete/:id')
   @ApiOperation({ summary: 'Permanently delete a product by ID' })
   @ApiParam({
@@ -216,20 +191,5 @@ export class ProductController {
     @Body() updateData: Partial<ProductDto>,
   ) {
     return this.productService.updateProduct(id, updateData);
-  }
-
-  @Get('/get-by-category/:id')
-  @ApiOperation({ summary: 'Get all products by category ID' })
-  @ApiParam({ name: 'id', type: String, description: 'Category ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Products retrieved successfully',
-    schema: {
-      example: [ProductExample],
-    },
-  })
-  @ApiCommonError('Category')
-  async getProductsByCategory(@Param('id') id: string) {
-    return this.productService.getProductsByCategory(id);
   }
 }
