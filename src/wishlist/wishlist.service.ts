@@ -29,7 +29,6 @@ export class WishlistService extends UserService {
    * Retrieves the list of products in a user's wishlist.
    * @param userId - The user's ID.
    * @returns An array of products in the wishlist.
-   * @throws BadRequestException if a query error occurs.
    */
   async getWishlist(userId: string): Promise<Product[]> {
     try {
@@ -64,7 +63,6 @@ export class WishlistService extends UserService {
    * @param productId - The product ID to add.
    * @returns The updated user with the modified wishlist.
    * @throws NotFoundException if the product does not exist.
-   * @throws BadRequestException if a query error occurs.
    */
   async addToWishlist(userId: string, productId: string): Promise<User> {
     try {
@@ -98,7 +96,6 @@ export class WishlistService extends UserService {
    * @param userId - The user's ID.
    * @param productId - The product ID to remove.
    * @returns The updated user with the modified wishlist.
-   * @throws BadRequestException if a query error occurs.
    */
   async removeFromWishlist(userId: string, productId: string): Promise<User> {
     try {

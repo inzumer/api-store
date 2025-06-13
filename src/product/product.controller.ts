@@ -21,7 +21,6 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { ApiCommonError } from '../common/decorators/swagger.decorators';
 import {
   PartialProductExample,
   ProductExample,
@@ -70,28 +69,6 @@ export class ProductController {
       },
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Category not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User owner not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User owner found',
-        error: 'Not Found',
-      },
-    },
-  })
   createProduct(@Body() product: ProductDto) {
     return this.productService.createProduct(product);
   }
@@ -111,7 +88,6 @@ export class ProductController {
       example: ProductExample,
     },
   })
-  @ApiCommonError('Product')
   gettById(@Param('id') id: string) {
     return this.productService.getProductById(id);
   }
@@ -133,7 +109,6 @@ export class ProductController {
       },
     },
   })
-  @ApiCommonError('Product')
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
   }
@@ -153,7 +128,6 @@ export class ProductController {
       example: SoftDeleteExample,
     },
   })
-  @ApiCommonError('Product')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async softDelete(@Param('id') id: string) {
     return this.productService.softDeleteProduct(id);
@@ -184,7 +158,6 @@ export class ProductController {
       example: UpdateProductExample,
     },
   })
-  @ApiCommonError('Product')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async updateProduct(
     @Param('id') id: string,

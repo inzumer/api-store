@@ -1,13 +1,17 @@
-/** Nest */
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-
 /** Product dependencies */
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
+
+/** Nest */
+import { Module } from '@nestjs/common';
+
+/** Mongoose */
+import { MongooseModule } from '@nestjs/mongoose';
+
+/** Schema */
 import { Product, ProductSchema } from './schema/product.schema';
 
-/** Category dependencies */
+/** Modules */
 import { CategoryModule } from '../category/category.module';
 
 @Module({

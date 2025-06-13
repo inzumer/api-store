@@ -1,10 +1,4 @@
-/** Swagger */
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-
-/** Transformer */
-import { Type } from 'class-transformer';
-
-/** Validators */
+/** Class validators */
 import {
   IsString,
   IsNotEmpty,
@@ -21,6 +15,12 @@ import {
   Max,
   IsInt,
 } from 'class-validator';
+
+/** Swagger */
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+/** Transformer */
+import { Type } from 'class-transformer';
 
 export const CURRENCIES = ['USD', 'EUR', 'ARS'] as const;
 

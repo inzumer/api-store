@@ -56,7 +56,6 @@ export class UserService {
    * Validates and transforms data into a CompleteUserDto instance.
    * @param data - The data to validate and transform.
    * @returns A CompleteUserDto instance if validation is successful.
-   * @throws BadRequestException if validation fails.
    */
   async validateData(data: Partial<CompleteUserDto>): Promise<CompleteUserDto> {
     try {
@@ -98,6 +97,7 @@ export class UserService {
    * Finds a user by email.
    * @param email - The email to search for.
    * @returns The user with the specified email.
+   * @throws NotFoundException if no email be found.
    */
   async findByEmail({ email }: EmailUserDto): Promise<User> {
     try {
@@ -117,7 +117,7 @@ export class UserService {
    * Validates user credentials.
    * @param data - The user credentials to validate.
    * @returns The user if credentials are valid.
-   * @throws BadRequestException if the password is invalid or user not found.
+   * @throws NotFoundException if the password is invalid or user not found.
    */
   async validateUserCredentials(data: LoginUserDto): Promise<User> {
     try {
@@ -128,7 +128,7 @@ export class UserService {
       const isValid = (await compare(password, user?.password)) as boolean;
 
       if (!isValid) {
-        throw new BadRequestException('Invalid password');
+        throw new NotFoundException('Invalid password');
       }
 
       return isValid && user;
@@ -141,8 +141,6 @@ export class UserService {
    * Finds a user by ID.
    * @param userId - The ID of the user to find.
    * @returns The user with the specified ID.
-   * @throws BadRequestException if the ID is invalid.
-   * @throws NotFoundException if the user is not found.
    */
   async findById(userId: string): Promise<User> {
     try {
@@ -161,8 +159,6 @@ export class UserService {
    * @param userId - The ID of the user to update.
    * @param data - Partial data to update the user.
    * @returns The updated user.
-   * @throws BadRequestException if the ID is invalid.
-   * @throws NotFoundException if the user does not exist.
    */
   async updateUser(
     userId: string,
@@ -193,8 +189,6 @@ export class UserService {
    * Soft deletes a user by setting is_active to false.
    * @param userId - The ID of the user to soft delete.
    * @returns The updated user with is_active set to false.
-   * @throws BadRequestException if the ID is invalid.
-   * @throws NotFoundException if the user is not found.
    */
   async softDeleteUser(userId: string): Promise<User> {
     try {
@@ -214,8 +208,6 @@ export class UserService {
    * Deletes a user by ID.
    * @param userId - The ID of the user to delete.
    * @returns A message indicating successful deletion.
-   * @throws BadRequestException if the ID is invalid.
-   * @throws NotFoundException if the user does not exist.
    */
   async deleteUser(userId: string): Promise<{ message: string }> {
     try {

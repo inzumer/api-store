@@ -24,8 +24,8 @@ export class SearchService {
    * Searches for products by name, case-insensitive.
    *
    * @param name - The name or partial name to search for.
-   * @throws NotFoundException if no products are found.
    * @returns An array of matching products.
+   * @throws NotFoundException if no products are found.
    */
   async findByName(name: string): Promise<Product[]> {
     try {
@@ -48,13 +48,13 @@ export class SearchService {
    *
    * @param categoryId - The ID of the category to retrieve products from.
    * @returns A list of products in the specified category.
-   * @throws BadRequestException if the category ID is invalid.
+   * @throws NotFoundException if the category ID is invalid.
    * @throws NotFoundException if the category does not exist.
    */
   async getProductsByCategory(categoryId: string): Promise<Product[]> {
     try {
       if (!isMongoId(categoryId)) {
-        throw new BadRequestException('Invalid category ID');
+        throw new NotFoundException('Invalid category ID');
       }
 
       const categoryExists = await this.categoryModel.exists({
@@ -80,13 +80,12 @@ export class SearchService {
    *
    * @param ownerId - The ID of the user who owns the products.
    * @returns A list of products belonging to the specified owner.
-   * @throws BadRequestException if the owner ID is invalid.
-   * @throws NotFoundException if no products are found for the given owner.
+   * @throws NotFoundException if the owner ID is invalid.
    */
   async findByOwner(userId: string): Promise<Product[]> {
     try {
       if (!isMongoId(userId)) {
-        throw new BadRequestException('Invalid user ID');
+        throw new NotFoundException('Invalid user ID');
       }
 
       return this.productModel.find({ owner: userId }).exec();

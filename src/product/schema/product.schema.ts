@@ -2,7 +2,7 @@
 import { HydratedDocument, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-/** DTOs */
+/** DTO */
 import { CURRENCIES, Currency } from '../dto';
 
 export type ProductDocument = HydratedDocument<Product>;

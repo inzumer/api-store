@@ -1,2 +1,2 @@
-/** Export DTOs */
+/** Export DTO */
 export * from './product.dto';
