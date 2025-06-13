@@ -8,7 +8,6 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { ApiCommonError } from '../common/decorators/swagger.decorators';
 import {
   LoginExample,
   EmailExample,
@@ -21,6 +20,8 @@ import { Controller, Delete, Post, Put, Body, Param } from '@nestjs/common';
 
 /** User dependencies */
 import { UserService } from './user.service';
+
+/** DTO */
 import { UserDto, LoginUserDto, EmailUserDto } from './dto';
 
 @ApiTags('Users')
@@ -39,7 +40,6 @@ export class UserController {
     description: 'User created',
     schema: { example: UserExample },
   })
-  @ApiCommonError('Create user')
   async create(@Body() data: UserDto) {
     return this.usersService.createUser(data);
   }
@@ -57,7 +57,6 @@ export class UserController {
     description: 'User logged in',
     schema: { example: UserExample },
   })
-  @ApiCommonError('Login')
   async login(@Body() credentials: LoginUserDto) {
     return this.usersService.validateUserCredentials(credentials);
   }
@@ -73,7 +72,6 @@ export class UserController {
     description: 'User found',
     schema: { example: UserExample },
   })
-  @ApiCommonError('Email')
   async findByEmail(@Body() email: EmailUserDto) {
     return this.usersService.findByEmail(email);
   }
@@ -86,7 +84,6 @@ export class UserController {
     description: 'User found',
     schema: { example: UserExample },
   })
-  @ApiCommonError('ID')
   async findById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
@@ -103,7 +100,6 @@ export class UserController {
     description: 'User updated',
     schema: { example: UserExample },
   })
-  @ApiCommonError('Update')
   async updateUser(
     @Param('id') id: string,
     @Body() updateData: Partial<UserDto>,
@@ -119,7 +115,6 @@ export class UserController {
     description: 'User soft deleted',
     schema: { example: UserExample },
   })
-  @ApiCommonError('Soft delete')
   async softDelete(@Param('id') id: string) {
     return this.usersService.softDeleteUser(id);
   }
@@ -132,7 +127,6 @@ export class UserController {
     description: 'User deleted',
     schema: { example: UserExample },
   })
-  @ApiCommonError('Delete')
   async deleteProduct(@Param('id') id: string) {
     return this.usersService.deleteUser(id);
   }

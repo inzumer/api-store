@@ -1,7 +1,7 @@
 /** Swagger */
 import { ApiProperty } from '@nestjs/swagger';
 
-/** Validators */
+/** Class validator */
 import { IsString, IsIn, IsOptional } from 'class-validator';
 
 export class Preferencies {

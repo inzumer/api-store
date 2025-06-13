@@ -1,10 +1,10 @@
 /** Swagger */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-/** Transformer */
+/** Class transformer */
 import { Type } from 'class-transformer';
 
-/** DTOs */
+/** DTO */
 import { Address } from '../dto/address.dto';
 import { CartItem } from '../dto/cart-item.dto';
 import { Preferencies } from './preferencies.dto';

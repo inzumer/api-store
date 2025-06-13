@@ -1,7 +1,7 @@
 /** Swagger */
 import { ApiProperty } from '@nestjs/swagger';
 
-/** Validators */
+/** Class validator */
 import { IsString, IsInt, MaxLength, Min, Max } from 'class-validator';
 
 export class Address {

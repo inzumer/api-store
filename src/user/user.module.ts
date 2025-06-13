@@ -1,10 +1,14 @@
-/** Nest */
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-
 /** User dependencies */
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+
+/** Nest */
+import { Module } from '@nestjs/common';
+
+/** Mongoose */
+import { MongooseModule } from '@nestjs/mongoose';
+
+/** Schemas */
 import { UserSchema } from './schema/user.schema';
 
 @Module({

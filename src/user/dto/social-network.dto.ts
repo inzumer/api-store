@@ -1,7 +1,7 @@
 /** Swagger */
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-/** Validators */
+/** Class validator */
 import { IsString, IsOptional, IsUrl } from 'class-validator';
 
 export class SocialNetwork {

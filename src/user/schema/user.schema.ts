@@ -1,8 +1,4 @@
-/** Mongoose */
-import { HydratedDocument, SchemaTypes, Types } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
-/** DTOs */
+/** DTO */
 import {
   UserRole,
   UserGender,
@@ -10,6 +6,10 @@ import {
   Preferencies,
   SocialNetwork,
 } from '../dto/index';
+
+/** Mongoose */
+import { HydratedDocument, SchemaTypes, Types } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 

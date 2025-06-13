@@ -1,2 +1,2 @@
-/** Export product schema */
+/** Export schema */
 export * from './user.schema';

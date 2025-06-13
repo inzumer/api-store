@@ -21,7 +21,7 @@ export const UserExample = {
   _id: '684471f278939b7fa540eb53',
   ...PartialUserExample,
   user_state: false,
-  is_active: true,
+  is_active: false,
   created_at: '2025-06-07T17:08:02.794Z',
   updated_at: '2025-06-07T17:08:02.794Z',
   last_conection: '2025-06-07T17:08:02.794Z',

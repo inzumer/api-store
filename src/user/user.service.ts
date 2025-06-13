@@ -1,18 +1,3 @@
-/** Class validator */
-import { isMongoId, validateOrReject } from 'class-validator';
-
-import { plainToInstance } from 'class-transformer';
-
-/** Resources */
-import { hash, compare } from 'bcrypt';
-
-/** Schemas */
-import { User, UserDocument } from './schema/user.schema';
-
-/** Mongoose */
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-
 /** Nest */
 import {
   Injectable,
@@ -27,6 +12,22 @@ import {
   LoginUserDto,
   CompleteUserDto,
 } from './dto/user.dto';
+
+/** Mongoose */
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+/** Class validator */
+import { isMongoId, validateOrReject } from 'class-validator';
+
+/** Class transform */
+import { plainToInstance } from 'class-transformer';
+
+/** Schemas */
+import { User, UserDocument } from './schema/user.schema';
+
+/** Resources bcrypt */
+import { hash, compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
