@@ -21,7 +21,6 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { ApiCommonError } from '../common/decorators/swagger.decorators';
 import {
   CategoryExample,
   PartialCategoryExample,
@@ -29,8 +28,10 @@ import {
   SoftDeleteExample,
 } from '../common/examples/category.example';
 
-/** Product dependencies */
+/** Category dependencies */
 import { CategoryService } from './category.service';
+
+/** DTO */
 import { CategoryDto } from './dto';
 
 @ApiTags('Category')
@@ -59,17 +60,6 @@ export class CategoryController {
       example: CategoryExample,
     },
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Validation failed',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: ['name must be a string', 'description must be a string'],
-        error: 'Bad Request',
-      },
-    },
-  })
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async createCategory(@Body() categoryData: CategoryDto) {
     return this.categoryService.createCategory(categoryData);
@@ -90,7 +80,6 @@ export class CategoryController {
       example: CategoryExample,
     },
   })
-  @ApiCommonError('Category')
   @ApiParam({ name: 'id', required: true })
   async getCategoryById(@Param('id') id: string) {
     return this.categoryService.getCategoryById(id);
@@ -133,7 +122,6 @@ export class CategoryController {
       example: UpdateCategoryExample,
     },
   })
-  @ApiCommonError('Category')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async updateCategory(
     @Param('id') id: string,
@@ -159,7 +147,6 @@ export class CategoryController {
       example: SoftDeleteExample,
     },
   })
-  @ApiCommonError('Category')
   async softDeleteCategory(@Param('id') id: string) {
     return this.categoryService.softDeleteCategory(id);
   }
@@ -181,7 +168,6 @@ export class CategoryController {
       },
     },
   })
-  @ApiCommonError('Category')
   async deleteCategory(@Param('id') id: string) {
     return this.categoryService.deleteCategory(id);
   }

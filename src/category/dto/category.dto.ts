@@ -1,7 +1,4 @@
-/** Swagger */
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-
-/** Validators */
+/** Class validators */
 import {
   IsString,
   IsNotEmpty,
@@ -10,6 +7,9 @@ import {
   IsBoolean,
   IsUrl,
 } from 'class-validator';
+
+/** Swagger */
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CategoryDto {
   @ApiProperty({
