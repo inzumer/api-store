@@ -2,10 +2,30 @@
 import { HydratedDocument, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-/** DTOs */
+/** DTO */
 import { CURRENCIES, Currency } from '../dto';
 
 export type ProductDocument = HydratedDocument<Product>;
+
+export class Review {
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  user: string;
+
+  @Prop({ type: String, required: true, maxlength: 500 })
+  comment: string;
+
+  @Prop({ default: Date.now })
+  created_at?: Date;
+
+  @Prop({ required: true, min: 1, max: 5 })
+  rating: number;
+
+  @Prop({ type: Number })
+  vote_affirmative: number;
+
+  @Prop({ type: Number })
+  vote_negative: number;
+}
 
 @Schema()
 export class Product {
@@ -41,6 +61,12 @@ export class Product {
 
   @Prop({ default: true })
   is_active: boolean;
+
+  @Prop({ type: [Review], default: [] })
+  reviews: Review[];
+
+  @Prop({ type: Number, min: 0, max: 5 })
+  score: number;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

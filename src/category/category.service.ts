@@ -1,10 +1,3 @@
-/** Class validator */
-import { isMongoId } from 'class-validator';
-
-/** Mongoose */
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-
 /** Nest */
 import {
   Injectable,
@@ -12,10 +5,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-/** Category DTOs */
+/** Mongoose */
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+
+/** Class validator */
+import { isMongoId } from 'class-validator';
+
+/** DTO */
 import { CategoryDto } from './dto/category.dto';
 
-/** Category schema */
+/** Schema */
 import { Category, CategoryDocument } from './schema/category.schema';
 
 @Injectable()

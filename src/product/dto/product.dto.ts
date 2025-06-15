@@ -1,10 +1,4 @@
-/** Swagger */
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-
-/** Transformer */
-import { Type } from 'class-transformer';
-
-/** Validators */
+/** Class validators */
 import {
   IsString,
   IsNotEmpty,
@@ -19,11 +13,49 @@ import {
   MaxLength,
   Min,
   Max,
+  IsInt,
 } from 'class-validator';
+
+/** Swagger */
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+/** Transformer */
+import { Type } from 'class-transformer';
 
 export const CURRENCIES = ['USD', 'EUR', 'ARS'] as const;
 
 export type Currency = (typeof CURRENCIES)[number];
+
+export class ReviewDto {
+  @ApiProperty({
+    description: 'Mongo ID of user',
+    example: '60c72b2f9b1e8d001c8e4f3a',
+  })
+  @IsMongoId()
+  @IsNotEmpty()
+  user: string;
+
+  @ApiPropertyOptional({
+    description: 'Creation date of the review (auto-generated)',
+    example: '2023-10-01T00:00:00Z',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  created_at?: Date;
+
+  @ApiProperty({ description: 'Rating from 1 to 5', minimum: 1, maximum: 5 })
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  rating: number;
+
+  @ApiProperty({ description: 'Vote affirmative' })
+  @IsInt()
+  vote_affirmative: number;
+
+  @ApiProperty({ description: 'Vote negative' })
+  vote_negative: number;
+}
 
 export class ProductDto {
   @ApiProperty({
@@ -125,4 +157,18 @@ export class ProductDto {
   @IsOptional()
   @IsBoolean()
   is_active?: boolean;
+
+  @ApiProperty({
+    description: 'Average rating from reviews',
+    example: 4.5,
+  })
+  score: number;
+
+  @ApiProperty({
+    description: 'List of product reviews',
+    type: [ReviewDto],
+  })
+  @IsMongoId()
+  @IsNotEmpty()
+  reviews: ReviewDto[];
 }

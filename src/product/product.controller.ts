@@ -21,7 +21,6 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { ApiCommonError } from '../common/decorators/swagger.decorators';
 import {
   PartialProductExample,
   ProductExample,
@@ -70,28 +69,6 @@ export class ProductController {
       },
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Category not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User owner not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User owner found',
-        error: 'Not Found',
-      },
-    },
-  })
   createProduct(@Body() product: ProductDto) {
     return this.productService.createProduct(product);
   }
@@ -111,34 +88,8 @@ export class ProductController {
       example: ProductExample,
     },
   })
-  @ApiCommonError('Product')
   gettById(@Param('id') id: string) {
     return this.productService.getProductById(id);
-  }
-
-  @Get('/get-by-name/:name')
-  @ApiOperation({ summary: 'Get product by name' })
-  @ApiParam({ name: 'name', type: String, description: 'Product name' })
-  @ApiResponse({
-    status: 200,
-    description: 'Product retrieved successfully',
-    schema: {
-      example: [ProductExample],
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Product with name not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with name not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  getByName(@Param('name') name: string) {
-    return this.productService.findByName(name);
   }
 
   @Delete('/delete/:id')
@@ -158,7 +109,6 @@ export class ProductController {
       },
     },
   })
-  @ApiCommonError('Product')
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
   }
@@ -178,7 +128,6 @@ export class ProductController {
       example: SoftDeleteExample,
     },
   })
-  @ApiCommonError('Product')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async softDelete(@Param('id') id: string) {
     return this.productService.softDeleteProduct(id);
@@ -209,27 +158,11 @@ export class ProductController {
       example: UpdateProductExample,
     },
   })
-  @ApiCommonError('Product')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async updateProduct(
     @Param('id') id: string,
     @Body() updateData: Partial<ProductDto>,
   ) {
     return this.productService.updateProduct(id, updateData);
-  }
-
-  @Get('/get-by-category/:id')
-  @ApiOperation({ summary: 'Get all products by category ID' })
-  @ApiParam({ name: 'id', type: String, description: 'Category ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Products retrieved successfully',
-    schema: {
-      example: [ProductExample],
-    },
-  })
-  @ApiCommonError('Category')
-  async getProductsByCategory(@Param('id') id: string) {
-    return this.productService.getProductsByCategory(id);
   }
 }
