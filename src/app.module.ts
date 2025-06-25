@@ -1,9 +1,15 @@
+/** Sentry */
+import { SentryModule } from '@sentry/nestjs/setup';
+
+/** Middlewares */
+import { AuthMiddleware, RequestIdMiddleware } from './common/middlewares';
+
 /** Dotenv */
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 /** Nest Imports */
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
@@ -18,6 +24,7 @@ import { WishlistModule } from './wishlist';
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -35,4 +42,21 @@ import { WishlistModule } from './wishlist';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(RequestIdMiddleware)
+      .exclude({ path: '/docs', method: RequestMethod.ALL })
+      .forRoutes('*');
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: '/users/login', method: RequestMethod.POST },
+        { path: '/users/create', method: RequestMethod.POST },
+      )
+      .forRoutes(
+        { path: 'users/(.*)', method: RequestMethod.ALL },
+        { path: 'whislist/(.*)', method: RequestMethod.ALL },
+      );
+  }
+}
