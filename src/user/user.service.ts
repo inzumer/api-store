@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 /** Nest */
 import {
   Injectable,
@@ -89,7 +88,7 @@ export class UserService {
       return instance;
     } catch (error) {
       this.logger.error(
-        { request: req, error },
+        { request: req, error: error as Error },
         'Validation failed for user data',
       );
 
@@ -117,7 +116,10 @@ export class UserService {
 
       return await createdUser.save();
     } catch (error) {
-      this.logger.error({ request: req, error }, 'User creation failed');
+      this.logger.error(
+        { request: req, error: error as Error },
+        'User creation failed',
+      );
 
       throw new HttpException(
         'User creation failed due to invalid data or server error.',
@@ -145,7 +147,10 @@ export class UserService {
 
       return userFind as UserDocument;
     } catch (error) {
-      this.logger.error({ request: req, error }, 'User lookup failed');
+      this.logger.error(
+        { request: req, error: error as Error },
+        'User lookup failed',
+      );
 
       if (error instanceof HttpException) {
         throw error;
@@ -190,7 +195,7 @@ export class UserService {
       return { token: `Bearer ${accessToken}` };
     } catch (error) {
       this.logger.error(
-        { request: req, error },
+        { request: req, error: error as Error },
         'User credential validation failed',
       );
 
@@ -223,7 +228,10 @@ export class UserService {
 
       return result as User;
     } catch (error) {
-      this.logger.error({ request: req, error }, 'User lookup by ID failed');
+      this.logger.error(
+        { request: req, error: error as Error },
+        'User lookup by ID failed',
+      );
 
       if (error instanceof HttpException) {
         throw error;
@@ -269,7 +277,10 @@ export class UserService {
 
       return result as User;
     } catch (error) {
-      this.logger.error({ request: req, error }, 'User update failed');
+      this.logger.error(
+        { request: req, error: error as Error },
+        'User update failed',
+      );
 
       if (error instanceof HttpException) {
         throw error;
@@ -302,7 +313,10 @@ export class UserService {
 
       return result as User;
     } catch (error) {
-      this.logger.error({ request: req, error }, 'User soft delete failed');
+      this.logger.error(
+        { request: req, error: error as Error },
+        'User soft delete failed',
+      );
 
       if (error instanceof HttpException) {
         throw error;
@@ -335,7 +349,10 @@ export class UserService {
         message: `User ${userId} deleted successfully`,
       };
     } catch (error) {
-      this.logger.error({ request: req, error }, 'User deletion failed');
+      this.logger.error(
+        { request: req, error: error as Error },
+        'User deletion failed',
+      );
 
       if (error instanceof HttpException) {
         throw error;
