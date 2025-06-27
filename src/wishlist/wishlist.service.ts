@@ -1,8 +1,9 @@
 /** Nest */
 import {
   Injectable,
-  BadRequestException,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 
 /** Mongoose */
@@ -16,8 +17,16 @@ import { Product, ProductDocument } from '../product/schema';
 /** Services */
 import { UserService } from '../user/user.service';
 
+/** Express */
+import { Request } from 'express';
+
+/** Logger */
+import { LoggerService } from '../common/logger';
+
 @Injectable()
 export class WishlistService extends UserService {
+  logger = new LoggerService('WishlistService');
+
   constructor(
     @InjectModel(User.name) userModel: Model<UserDocument>,
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
@@ -27,17 +36,15 @@ export class WishlistService extends UserService {
 
   /**
    * Retrieves the list of products in a user's wishlist.
+   * @param req - The request object, used for logging.
    * @param userId - The user's ID.
    * @returns An array of products in the wishlist.
    */
-  async getWishlist(userId: string): Promise<Product[]> {
+  async getWishlist(req: Request, userId: string): Promise<Product[]> {
     try {
       this.validateMongoId(userId);
 
-      const user = await this.userModel
-        .findById(userId)
-        .populate('wishlist')
-        .exec();
+      const user = await this.findById(req, userId);
 
       const wishlistIds = user?.wishlist;
 
@@ -52,19 +59,36 @@ export class WishlistService extends UserService {
         .exec();
 
       return products;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Failed to retrieve wishlist products',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while retrieving the wishlist.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Adds a product to a user's wishlist.
+   * @param req - The request object, used for logging.
    * @param userId - The user's ID.
    * @param productId - The product ID to add.
    * @returns The updated user with the modified wishlist.
    * @throws NotFoundException if the product does not exist.
    */
-  async addToWishlist(userId: string, productId: string): Promise<User> {
+  async addToWishlist(
+    req: Request,
+    userId: string,
+    productId: string,
+  ): Promise<User> {
     try {
       this.validateMongoId(userId);
       this.validateMongoId(productId);
@@ -86,18 +110,35 @@ export class WishlistService extends UserService {
       }
 
       return (await user?.save()) as User;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Failed add wishlist products',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while adding a product to the wishlist.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Removes a product from a user's wishlist.
+   * @param req - The request object, used for logging.
    * @param userId - The user's ID.
    * @param productId - The product ID to remove.
    * @returns The updated user with the modified wishlist.
    */
-  async removeFromWishlist(userId: string, productId: string): Promise<User> {
+  async removeFromWishlist(
+    req: Request,
+    userId: string,
+    productId: string,
+  ): Promise<User> {
     try {
       const user = await this.userModel.findById(userId);
 
@@ -106,8 +147,20 @@ export class WishlistService extends UserService {
       }
 
       return (await user?.save()) as User;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Failed remove wishlist products',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while removing a product to the wishlist.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
