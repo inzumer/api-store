@@ -27,14 +27,14 @@ import {
   Req,
 } from '@nestjs/common';
 
-/** Express */
-import { Request } from 'express';
-
 /** User dependencies */
 import { UserService } from './user.service';
 
 /** DTO */
 import { UserDto, LoginUserDto, EmailUserDto } from './dto';
+
+/** Express */
+import { Request } from 'express';
 
 /** Decorators */
 import { CommonHeaders } from '../common/decorators';

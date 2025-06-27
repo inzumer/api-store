@@ -44,13 +44,13 @@ export class ReviewService {
     productId: string,
   ): Promise<Product> {
     try {
-      const product = await this.productService.getProductById(productId);
+      const product = await this.productService.getProductById(req, productId);
 
       const ratings = product.reviews.map((review) => review.rating);
 
       const total = ratings.reduce((acc, curr) => acc + curr, 0);
 
-      const updateRange = this.productService.updateProduct(productId, {
+      const updateRange = this.productService.updateProduct(req, productId, {
         score: total,
       });
 
@@ -89,7 +89,7 @@ export class ReviewService {
     review: ReviewDto,
   ): Promise<Product> {
     try {
-      const product = await this.productService.getProductById(productId);
+      const product = await this.productService.getProductById(req, productId);
 
       const existingReview = product.reviews.find(
         (review) => review.user.toString() === userId.toString(),
@@ -101,7 +101,7 @@ export class ReviewService {
         );
       }
 
-      const productUpdate = this.productService.updateProduct(productId, {
+      const productUpdate = this.productService.updateProduct(req, productId, {
         reviews: [
           ...product.reviews,
           {
@@ -146,7 +146,7 @@ export class ReviewService {
     userId: string,
   ): Promise<Product> {
     try {
-      const product = await this.productService.getProductById(productId);
+      const product = await this.productService.getProductById(req, productId);
 
       const filteredReviews = product.reviews.filter(
         (review) => review.user.toString() !== userId.toString(),
@@ -158,7 +158,7 @@ export class ReviewService {
         );
       }
 
-      const productUpdate = this.productService.updateProduct(productId, {
+      const productUpdate = this.productService.updateProduct(req, productId, {
         reviews: { ...filteredReviews },
       });
 
@@ -191,7 +191,7 @@ export class ReviewService {
    */
   async getReviews(req: Request, productId: string) {
     try {
-      const product = await this.productService.getProductById(productId);
+      const product = await this.productService.getProductById(req, productId);
 
       const userIds = product.reviews.map((review) => review.user);
 
