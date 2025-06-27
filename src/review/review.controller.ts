@@ -5,6 +5,7 @@ import {
   ApiParam,
   ApiResponse,
   ApiBody,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 /** Commons */
@@ -14,13 +15,27 @@ import {
 } from '../common/examples/product.example';
 
 /** Nest */
-import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Req,
+} from '@nestjs/common';
 
 /** Review dependencies */
 import { ReviewService } from './review.service';
 
 /** DTO */
 import { ReviewDto } from './dto/review.dto';
+
+/** Express */
+import { Request } from 'express';
+
+/** Decorators */
+import { CommonHeaders } from '../common/decorators';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -29,6 +44,7 @@ export class ReviewController {
 
   @Post('/add/:id')
   @ApiOperation({ summary: 'Add a review to a product by user ID' })
+  @CommonHeaders()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: ReviewDto,
@@ -52,16 +68,41 @@ export class ReviewController {
       example: ProductExample,
     },
   })
+  @ApiResponse({
+    status: 409,
+    description: 'User has already reviewed this product',
+    schema: {
+      example: {
+        statusCode: 409,
+        message:
+          'User "683670955dbc65f5c48871a2" has already reviewed this product.',
+        error: 'Conflict',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error while adding the review',
+    schema: {
+      example: {
+        statusCode: 500,
+        message: 'An unexpected error occurred while adding the review.',
+        error: 'Internal Server Error',
+      },
+    },
+  })
   async addReview(
+    @Req() req: Request,
     @Param('id') productId: string,
     @Body() review: ReviewDto,
     userId: string,
   ) {
-    return await this.reviewService.addReview(productId, userId, review);
+    return await this.reviewService.addReview(req, productId, userId, review);
   }
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: "Remove a user's review from a product" })
+  @CommonHeaders()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: String,
@@ -82,12 +123,45 @@ export class ReviewController {
       example: ProductExample,
     },
   })
-  async removeReview(@Param('id') productId: string, @Body() userId: string) {
-    return await this.reviewService.removeReview(productId, userId);
+  @ApiResponse({
+    status: 404,
+    description: 'Review from specified user not found',
+    schema: {
+      example: {
+        statusCode: 404,
+        message:
+          'No review found from user "683670955dbc65f5c48871a2" for this product',
+        error: 'Not Found',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error while removing the review',
+    schema: {
+      example: {
+        statusCode: 500,
+        message: 'An unexpected error occurred while removing the review.',
+        error: 'Internal Server Error',
+      },
+    },
+  })
+  async removeReview(
+    @Req() req: Request,
+    @Param('id') productId: string,
+    @Body() userId: string,
+  ) {
+    return await this.reviewService.removeReview(req, productId, userId);
   }
 
   @Get('/get-all/:id')
   @ApiOperation({ summary: 'Get all user details from reviews of a product' })
+  @ApiHeader({
+    name: 'request-id',
+    description: 'Unique request identifier to trace requests across services',
+    required: true,
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
   @ApiParam({
     name: 'id',
     type: String,
@@ -100,7 +174,21 @@ export class ReviewController {
       example: [ReviewExample],
     },
   })
-  async getProductReviewUsers(@Param('id') productId: string) {
-    return await this.reviewService.getReviews(productId);
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error during user creation',
+    schema: {
+      example: {
+        statusCode: 500,
+        message: 'An unexpected error occurred while retrieving reviews.',
+        error: 'Internal Server Error',
+      },
+    },
+  })
+  async getProductReviewUsers(
+    @Req() req: Request,
+    @Param('id') productId: string,
+  ) {
+    return await this.reviewService.getReviews(req, productId);
   }
 }

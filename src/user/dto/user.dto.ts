@@ -181,3 +181,5 @@ export type NicknameUserDto = Pick<UserDto, 'nickname'>;
 export type LoginUserDto = Pick<UserDto, 'email' | 'password'>;
 
 export type EmailUserDto = Pick<UserDto, 'email'>;
+
+export type UserToken = { token: string };
