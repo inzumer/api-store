@@ -3,6 +3,8 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 
 /** Schema */
@@ -16,8 +18,16 @@ import { Model, Types } from 'mongoose';
 /** Services */
 import { UserService } from '../user/user.service';
 
+/** Logger */
+import { LoggerService } from '../common/logger';
+
+/** Express */
+import { Request } from 'express';
+
 @Injectable()
 export class CartService {
+  logger = new LoggerService('CartService');
+
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
@@ -26,10 +36,11 @@ export class CartService {
 
   /**
    * Retrieves the list of products in a user's cart.
+   * @param req - The request object, used for logging.
    * @param userId - The user's ID.
    * @returns An array of products in the cart.
    */
-  async getCart(userId: string): Promise<Product[]> {
+  async getCart(req: Request, userId: string): Promise<Product[]> {
     try {
       this.userService.validateMongoId(userId);
 
@@ -37,6 +48,10 @@ export class CartService {
         .findById(userId)
         .populate('cart')
         .exec();
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
 
       const cartIds = user?.cart;
 
@@ -51,13 +66,26 @@ export class CartService {
         .exec();
 
       return products;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Failed to retrieve cart',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while retrieving the cart.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Adds a product to a user's cart or updates its quantity if it already exists.
+   * @param req - The request object, used for logging.
    * @param userId - The user's ID.
    * @param productId - The product ID to add.
    * @param quantity - The quantity to add.
@@ -65,6 +93,7 @@ export class CartService {
    * @throws NotFoundException if the product does not exist.
    */
   async addToCart(
+    req: Request,
     userId: string,
     productId: string,
     quantity: number,
@@ -73,7 +102,7 @@ export class CartService {
       this.userService.validateMongoId(userId);
       this.userService.validateMongoId(productId);
 
-      const user = await this.userService.findById(userId);
+      const user = await this.userService.findById(req, userId);
 
       const productExists = await this.productModel.exists({ _id: productId });
 
@@ -98,18 +127,35 @@ export class CartService {
         .exec();
 
       return updatedUser as User;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Failed to add product to cart',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while adding the product to cart.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Removes a product from a user's cart.
+   * @param req - The request object, used for logging.
    * @param userId - The user's ID.
    * @param productId - The product ID to remove.
    * @returns The updated user with the modified cart.
    */
-  async removeFromCart(userId: string, productId: string): Promise<User> {
+  async removeFromCart(
+    req: Request,
+    userId: string,
+    productId: string,
+  ): Promise<User> {
     try {
       this.userService.validateMongoId(userId);
       this.userService.validateMongoId(productId);
@@ -120,14 +166,31 @@ export class CartService {
         { new: true },
       );
 
+      if (!updatedUser) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+
       return updatedUser as User;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Failed to remove product from cart',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while removing the product from cart.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Updates the quantity of a product in a user's cart.
+   * @param req - The request object, used for logging.
    * @param userId - The user's ID.
    * @param productId - The product ID to update.
    * @param quantity - The new quantity to set.
@@ -135,6 +198,7 @@ export class CartService {
    * @throws BadRequestException if the quantity is not valid or a query error occurs.
    */
   async updateCartProduct(
+    req: Request,
     userId: string,
     productId: string,
     quantity: number,
@@ -144,10 +208,12 @@ export class CartService {
       this.userService.validateMongoId(productId);
 
       if (quantity <= 0) {
-        throw new BadRequestException('Quantity must be greater than 0');
+        throw new BadRequestException(
+          `Invalid quantity "${quantity}". It must be greater than 0.`,
+        );
       }
 
-      const user = await this.userService.findById(userId);
+      const user = await this.userService.findById(req, userId);
 
       const index = user?.cart.findIndex(
         (item) => item.productId.toString() === productId,
@@ -164,8 +230,20 @@ export class CartService {
         .exec();
 
       return updatedUser as User;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Cart update failed',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while updating the cart.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
