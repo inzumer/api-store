@@ -1,8 +1,9 @@
 /** Nest */
 import {
   Injectable,
-  BadRequestException,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 
 /** Schema */
@@ -19,8 +20,16 @@ import { isMongoId } from 'class-validator';
 /** DTO */
 import { ProductDto } from './dto/product.dto';
 
+/** Express */
+import { Request } from 'express';
+
+/** Logger */
+import { LoggerService } from '../common/logger';
+
 @Injectable()
 export class ProductService {
+  logger = new LoggerService('ProductService');
+
   constructor(
     @InjectModel(Product.name)
     private readonly productModel: Model<ProductDocument>,
@@ -30,12 +39,12 @@ export class ProductService {
 
   /**
    * Creates a new product linked to an existing category.
-   *
+   * @param req - The request object, used for logging.
    * @param product - Product data to be created.
    * @returns The newly created product.
    * @throws NotFoundException if the category does not exist.
    */
-  async createProduct(product: ProductDto): Promise<Product> {
+  async createProduct(req: Request, product: ProductDto): Promise<Product> {
     try {
       const categoryExists = await this.categoryModel.exists({
         _id: product.category_id,
@@ -48,20 +57,32 @@ export class ProductService {
       const createdProduct = new this.productModel(product);
 
       return createdProduct.save();
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Product creation failed',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while creating the product.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Retrieves a product by its ID.
-   *
+   * @param req - The request object, used for logging.
    * @param productId - The ID of the product to retrieve.
    * @returns The found product.
    * @throws NotFoundException if the ID is invalid.
    * @throws NotFoundException if the product is not found.
    */
-  async getProductById(productId: string): Promise<Product> {
+  async getProductById(req: Request, productId: string): Promise<Product> {
     try {
       if (!isMongoId(productId)) {
         throw new NotFoundException('Invalid product ID');
@@ -74,14 +95,26 @@ export class ProductService {
       }
 
       return product;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Product lookup by ID failed',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while retrieving the product.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Updates an existing product with partial data.
-   *
+   * @param req - The request object, used for logging.
    * @param productId - The ID of the product to update.
    * @param updateData - Partial data to update the product.
    * @returns The updated product.
@@ -89,6 +122,7 @@ export class ProductService {
    * @throws NotFoundException if the product does not exist.
    */
   async updateProduct(
+    req: Request,
     productId: string,
     updateData: Partial<ProductDto>,
   ): Promise<Product> {
@@ -106,20 +140,32 @@ export class ProductService {
       }
 
       return updatedProduct;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Product update failed',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while updating the product.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Performs a soft delete by setting the product as inactive.
-   *
+   * @param req - The request object, used for logging.
    * @param productId - The ID of the product to soft delete.
    * @returns Product update with soft deleted.
    * @throws NotFoundException if the ID is invalid.
    * @throws NotFoundException if the product does not exist.
    */
-  async softDeleteProduct(productId: string): Promise<Product> {
+  async softDeleteProduct(req: Request, productId: string): Promise<Product> {
     try {
       if (!isMongoId(productId)) {
         throw new NotFoundException('Invalid product ID');
@@ -134,22 +180,37 @@ export class ProductService {
       }
 
       return softDeletedProduct;
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Product soft delete failed',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while soft-deleting the product.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   /**
    * Permanently deletes a product from the database.
-   *
+   * @param req - The request object, used for logging.
    * @param productId - The ID of the product to delete.
    * @returns A message from deleted.
    * @throws NotFoundException if the ID is invalid.
    */
-  async deleteProduct(productId: string): Promise<{ message: string }> {
+  async deleteProduct(
+    req: Request,
+    productId: string,
+  ): Promise<{ message: string }> {
     try {
       if (!isMongoId(productId)) {
-        throw new NotFoundException('Invalid product ID');
+        throw new NotFoundException(`Product with ID "${productId}" not found`);
       }
 
       await this.productModel.findByIdAndDelete(productId).exec();
@@ -157,8 +218,20 @@ export class ProductService {
       return {
         message: 'Product deleted successfully',
       };
-    } catch (errors) {
-      throw new BadRequestException(`${errors}`);
+    } catch (error) {
+      this.logger.error(
+        { request: req, error: error as Error },
+        'Product deletion failed',
+      );
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'An unexpected error occurred while deleting the product.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
