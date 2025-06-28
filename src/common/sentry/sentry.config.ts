@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 export const SentryInit = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = process.env.AMBIENT_MODE === 'production';
 
   if (!isProduction && !process.env.SENTRY_DSN) {
     return console.warn(
@@ -19,7 +19,7 @@ export const SentryInit = () => {
     profileLifecycle: 'trace',
     sendDefaultPii: true,
     release: process.env.PACKAGE_VERSION,
-    environment: process.env.NODE_ENV,
+    environment: process.env.AMBIENT_MODE,
     beforeSend(event) {
       if (event.request?.headers?.authorization) {
         event.request.headers.authorization = '[REDACTED]';
