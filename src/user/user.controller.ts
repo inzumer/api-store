@@ -106,39 +106,6 @@ export class UserController {
     description: 'User logged in',
     schema: { example: UserExample },
   })
-  @ApiResponse({
-    status: 401,
-    description: 'Invalid credentials (wrong email or password)',
-    schema: {
-      example: {
-        statusCode: 401,
-        message: 'Invalid password',
-        error: 'Unauthorized',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with email user@example.com not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected internal server error during login',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred during login.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async login(@Req() req: Request, @Body() credentials: LoginUserDto) {
     return this.usersService.validateUserCredentials(req, credentials);
   }
@@ -155,28 +122,6 @@ export class UserController {
     description: 'User found',
     schema: { example: UserExample },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'User with the specified email not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with email user@example.com not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during user lookup by email',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An error occurred while retrieving user data.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async findByEmail(@Req() req: Request, @Body() email: EmailUserDto) {
     return this.usersService.findByEmail(req, email);
   }
@@ -189,39 +134,6 @@ export class UserController {
     status: 200,
     description: 'User found',
     schema: { example: UserExample },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid MongoDB ID format',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid MongoDB ID',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID 649e5d42f62a9c23b8c6e9b7 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during user lookup',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An error occurred while retrieving user by ID.',
-        error: 'Internal Server Error',
-      },
-    },
   })
   async findById(@Req() req: Request, @Param('id') id: string) {
     return this.usersService.findById(req, id);
@@ -240,39 +152,6 @@ export class UserController {
     description: 'User updated',
     schema: { example: UserExample },
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid user ID or validation failed',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid MongoDB ID',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID 649e5d42f62a9c23b8c6e9b7 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error during user update',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An error occurred while updating user.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async updateUser(
     @Req() req: Request,
     @Param('id') id: string,
@@ -290,39 +169,6 @@ export class UserController {
     description: 'User soft deleted',
     schema: { example: UserExample },
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid MongoDB ID format',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid MongoDB ID',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID 649e5d42f62a9c23b8c6e9b7 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during user deactivation',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An error occurred while trying to deactivate the user.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async softDelete(@Req() req: Request, @Param('id') id: string) {
     return this.usersService.softDeleteUser(req, id);
   }
@@ -337,39 +183,6 @@ export class UserController {
     schema: {
       example: {
         message: 'User 683670955dbc65f5c48871a2 deleted successfully',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid MongoDB ID format',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid MongoDB ID',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID 649e5d42f62a9c23b8c6e9b7 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during deletion',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An error occurred while trying to delete the user.',
-        error: 'Internal Server Error',
       },
     },
   })

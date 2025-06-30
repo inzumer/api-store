@@ -67,28 +67,6 @@ export class ProductController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Category not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during product creation',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while creating the product.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   createProduct(@Req() req: Request, @Body() product: ProductDto) {
     return this.productService.createProduct(req, product);
   }
@@ -114,28 +92,6 @@ export class ProductController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e9" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while retrieving product',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving the product.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   gettById(@Req() req: Request, @Param('id') id: string) {
     return this.productService.getProductById(req, id);
   }
@@ -158,28 +114,6 @@ export class ProductController {
       },
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e7" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while deleting product',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while deleting the product.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   deleteProduct(@Req() req: Request, @Param('id') id: string) {
     return this.productService.deleteProduct(req, id);
   }
@@ -198,29 +132,6 @@ export class ProductController {
     description: 'Product soft-deleted successfully',
     schema: {
       example: SoftDeleteExample,
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid product ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e7" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while soft-deleting the product',
-    schema: {
-      example: {
-        statusCode: 500,
-        message:
-          'An unexpected error occurred while soft-deleting the product.',
-        error: 'Internal Server Error',
-      },
     },
   })
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -252,28 +163,6 @@ export class ProductController {
     description: 'Product updated successfully',
     schema: {
       example: UpdateProductExample,
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid product ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e7" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during product update',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while updating the product.',
-        error: 'Internal Server Error',
-      },
     },
   })
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))

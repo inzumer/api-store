@@ -54,29 +54,6 @@ export class CartController {
       },
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Product or User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error while updating cart',
-    schema: {
-      example: {
-        statusCode: 500,
-        message:
-          'An unexpected error occurred while adding the product to cart.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async addProductToCart(
     @Req() req: Request,
     @Param('userId') userId: string,
@@ -106,40 +83,6 @@ export class CartController {
       example: UserCartEmptyExample,
     },
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid Mongo IDs or bad request',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid ID format',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID 123 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error during cart update',
-    schema: {
-      example: {
-        statusCode: 500,
-        message:
-          'An unexpected error occurred while removing the product from cart.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async removeProductFromCart(
     @Req() req: Request,
     @Param('userId') userId: string,
@@ -157,39 +100,6 @@ export class CartController {
     description: 'Cart retrieved successfully',
     example: UserCartExample,
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid user ID format or bad request',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'User with ID 683670955dbc65f5c48871a2 not found',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID 123 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error while retrieving cart',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving the cart.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async getCart(@Req() req: Request, @Param('userId') userId: string) {
     return this.cartService.getCart(req, userId);
   }
@@ -206,39 +116,6 @@ export class CartController {
     description: 'Cart product updated successfully',
     schema: {
       example: UserCartExample,
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad Request (invalid ID or quantity)',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid quantity "-2". It must be greater than 0.',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID 649e5d42f62a9c23b8c6e9b7 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error during cart update',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'Internal server error',
-        error: 'Internal Server Error',
-      },
     },
   })
   async updateCart(

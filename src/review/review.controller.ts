@@ -68,29 +68,6 @@ export class ReviewController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 409,
-    description: 'User has already reviewed this product',
-    schema: {
-      example: {
-        statusCode: 409,
-        message:
-          'User "683670955dbc65f5c48871a2" has already reviewed this product.',
-        error: 'Conflict',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while adding the review',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while adding the review.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async addReview(
     @Req() req: Request,
     @Param('id') productId: string,
@@ -123,29 +100,6 @@ export class ReviewController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Review from specified user not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message:
-          'No review found from user "683670955dbc65f5c48871a2" for this product',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while removing the review',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while removing the review.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async removeReview(
     @Req() req: Request,
     @Param('id') productId: string,
@@ -172,17 +126,6 @@ export class ReviewController {
     description: 'List of users who left a review for the product',
     schema: {
       example: [ReviewExample],
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during user creation',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving reviews.',
-        error: 'Internal Server Error',
-      },
     },
   })
   async getProductReviewUsers(

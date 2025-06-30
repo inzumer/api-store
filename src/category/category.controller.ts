@@ -69,28 +69,6 @@ export class CategoryController {
       example: CategoryExample,
     },
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Category with this name already exists',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Category with this name already exists',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error while creating category',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while creating the category.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async createCategory(@Req() req: Request, @Body() categoryData: CategoryDto) {
     return this.categoryService.createCategory(req, categoryData);
@@ -117,28 +95,6 @@ export class CategoryController {
       example: CategoryExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Invalid or non-existing category ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category with ID "someId" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error while retrieving category',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving the category.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   @ApiParam({ name: 'id', required: true })
   async getCategoryById(@Req() req: Request, @Param('id') id: string) {
     return this.categoryService.getCategoryById(req, id);
@@ -157,17 +113,6 @@ export class CategoryController {
     description: 'List of active categories returned successfully',
     schema: {
       example: [CategoryExample],
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error while retrieving categories',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving categories.',
-        error: 'Internal Server Error',
-      },
     },
   })
   async getAllCategories(@Req() req: Request) {
@@ -199,39 +144,6 @@ export class CategoryController {
       example: UpdateCategoryExample,
     },
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid category ID format',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid category ID',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Category not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error while updating the category',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while updating the category.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async updateCategory(
     @Req() req: Request,
@@ -259,40 +171,6 @@ export class CategoryController {
       example: SoftDeleteExample,
     },
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid category ID format',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid category ID',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Category not found with the given ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category with ID "60f5b8e2c1234567890abcdef" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error during category soft-delete',
-    schema: {
-      example: {
-        statusCode: 500,
-        message:
-          'An unexpected error occurred while soft deleting the category.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async softDeleteCategory(@Req() req: Request, @Param('id') id: string) {
     return this.categoryService.softDeleteCategory(req, id);
   }
@@ -312,39 +190,6 @@ export class CategoryController {
     schema: {
       example: {
         message: 'Category deleted successfully',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid category ID format',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: 'Invalid category ID',
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Category not found with the given ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category with ID "60f5b8e2c1234567890abcdef" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Unexpected server error during category deletion',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while deleting the category.',
-        error: 'Internal Server Error',
       },
     },
   })

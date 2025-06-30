@@ -43,29 +43,6 @@ export class WishlistController {
       example: UserWishlistExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or another relationated with a product',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during user lookup by email',
-    schema: {
-      example: {
-        statusCode: 500,
-        message:
-          'An unexpected error occurred while adding a product to the wishlist.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async addProductToWishlist(
     @Req() req: Request,
     @Param('userId') userId: string,
@@ -86,29 +63,6 @@ export class WishlistController {
       example: UserWishlistEmptyExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID "683670955dbc65f5c48871a2" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while removing product from wishlist',
-    schema: {
-      example: {
-        statusCode: 500,
-        message:
-          'An unexpected error occurred while removing a product from the wishlist.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async removeProductFromWishlist(
     @Req() req: Request,
     @Param('userId') userId: string,
@@ -126,28 +80,6 @@ export class WishlistController {
     description: 'Wishlist retrieved successfully',
     schema: {
       example: UserWishlistExample,
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'User with ID "683670955dbc65f5c48871a2" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while retrieving wishlist',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving the wishlist.',
-        error: 'Internal Server Error',
-      },
     },
   })
   async getWishlist(@Req() req: Request, @Param('userId') userId: string) {
