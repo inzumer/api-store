@@ -1,0 +1,9 @@
+export const {
+  WEB_MOBILE_APP_ID,
+  WEB_DESKTOP_APP_ID,
+  ANDROID_APP_ID,
+  IOS_APP_ID,
+  TABLET_APP_ID,
+  DESKTOP_APP_ID,
+  SWAGGER_APP_ID,
+} = process.env;

@@ -19,7 +19,6 @@ import {
   ApiParam,
   ApiBody,
   ApiResponse,
-  ApiHeader,
 } from '@nestjs/swagger';
 
 /** Commons */
@@ -40,7 +39,7 @@ import { CategoryDto } from './dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Category')
 @Controller('category')
@@ -76,12 +75,7 @@ export class CategoryController {
 
   @Get('/get-by-id/:id')
   @ApiOperation({ summary: 'Get category by ID' })
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiParam({
     name: 'id',
     type: String,
@@ -101,12 +95,7 @@ export class CategoryController {
   }
 
   @Get('/get-all')
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiOperation({ summary: 'Get all categories' })
   @ApiResponse({
     status: 200,
@@ -121,7 +110,7 @@ export class CategoryController {
 
   @Put('/update/:id')
   @ApiOperation({ summary: 'Update a category by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({
     name: 'id',
     type: String,
@@ -157,7 +146,7 @@ export class CategoryController {
   @ApiOperation({
     summary: 'Soft delete a category by ID (sets is_active to false)',
   })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({
     name: 'id',
     type: String,
@@ -177,7 +166,7 @@ export class CategoryController {
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: 'Permanently delete a category by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({
     name: 'id',
     type: String,

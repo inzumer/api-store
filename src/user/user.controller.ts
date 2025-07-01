@@ -5,7 +5,6 @@ import {
   ApiParam,
   ApiBody,
   ApiResponse,
-  ApiHeader,
 } from '@nestjs/swagger';
 
 /** Commons */
@@ -37,7 +36,7 @@ import { UserDto, LoginUserDto, EmailUserDto } from './dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Users')
 @Controller('users')
@@ -46,12 +45,7 @@ export class UserController {
 
   @Post('/create')
   @ApiOperation({ summary: 'Create a new user' })
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiBody({
     required: true,
     schema: { example: PartialUserExample },
@@ -89,12 +83,7 @@ export class UserController {
 
   @Post('/login')
   @ApiOperation({ summary: 'User login' })
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiBody({
     required: true,
     schema: {
@@ -112,7 +101,7 @@ export class UserController {
 
   @Post('/find-by-email')
   @ApiOperation({ summary: 'Find user by email' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiBody({
     required: true,
     schema: { example: EmailExample },
@@ -128,7 +117,7 @@ export class UserController {
 
   @Post('/find-by-id/:id')
   @ApiOperation({ summary: 'Find user by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiResponse({
     status: 200,
@@ -141,7 +130,7 @@ export class UserController {
 
   @Put('/update/:id')
   @ApiOperation({ summary: 'Update user by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiBody({
     required: true,
@@ -162,7 +151,7 @@ export class UserController {
 
   @Put('/soft-delete/:id')
   @ApiOperation({ summary: 'Soft delete user by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiResponse({
     status: 200,
@@ -175,7 +164,7 @@ export class UserController {
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: 'Delete user by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiResponse({
     status: 200,

@@ -24,7 +24,7 @@ import { WishlistService } from './wishlist.service';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Wishlist')
 @Controller('wishlist')
@@ -33,7 +33,7 @@ export class WishlistController {
 
   @Put('/add/:userId')
   @ApiOperation({ summary: 'Add a product to the wishlist' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'userId', description: 'ID of the user' })
   @ApiBody({ schema: WishlistExample })
   @ApiResponse({
@@ -53,7 +53,7 @@ export class WishlistController {
 
   @Put('/delete/:userId')
   @ApiOperation({ summary: 'Remove a product from the wishlist' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'userId', description: 'ID of the user' })
   @ApiBody({ schema: WishlistExample })
   @ApiResponse({
@@ -73,7 +73,7 @@ export class WishlistController {
 
   @Get('/get-all/:userId')
   @ApiOperation({ summary: "Get all products in the user's wishlist" })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'userId', description: 'ID of the user' })
   @ApiResponse({
     status: 200,

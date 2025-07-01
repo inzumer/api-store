@@ -5,7 +5,6 @@ import {
   ApiParam,
   ApiResponse,
   ApiBody,
-  ApiHeader,
 } from '@nestjs/swagger';
 
 /** Commons */
@@ -35,7 +34,7 @@ import { ReviewDto } from './dto/review.dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -44,7 +43,7 @@ export class ReviewController {
 
   @Post('/add/:id')
   @ApiOperation({ summary: 'Add a review to a product by user ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: ReviewDto,
@@ -79,7 +78,7 @@ export class ReviewController {
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: "Remove a user's review from a product" })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: String,
@@ -110,12 +109,7 @@ export class ReviewController {
 
   @Get('/get-all/:id')
   @ApiOperation({ summary: 'Get all user details from reviews of a product' })
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiParam({
     name: 'id',
     type: String,

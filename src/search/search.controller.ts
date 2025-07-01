@@ -14,7 +14,7 @@ import { SearchService } from './search.service';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Search')
 @Controller('search')
@@ -23,7 +23,7 @@ export class SearchController {
 
   @Get('/by-name/:name')
   @ApiOperation({ summary: 'Get product by name' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'name', type: String, description: 'Product name' })
   @ApiResponse({
     status: 200,
@@ -38,7 +38,7 @@ export class SearchController {
 
   @Get('/by-category/:id')
   @ApiOperation({ summary: 'Get all products by category ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Category ID' })
   @ApiResponse({
     status: 200,
@@ -53,7 +53,7 @@ export class SearchController {
 
   @Get('/by-owner/:id')
   @ApiOperation({ summary: 'Get all products by owner ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Owner (User) ID' })
   @ApiResponse({
     status: 200,

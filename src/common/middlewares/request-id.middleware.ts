@@ -1,7 +1,13 @@
+/** Nest */
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
+/** Express */
 import { Request, Response, NextFunction } from 'express';
 
+/** Resources crypto */
+import { randomUUID } from 'crypto';
+
+/** Logger */
 import { LoggerService } from '../logger';
 
 @Injectable()
@@ -10,10 +16,10 @@ export class RequestIdMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     try {
-      const requestId = req.headers['request-id'];
+      let requestId = req.headers['request-id'];
 
       if (!requestId || typeof requestId !== 'string') {
-        throw new Error('Invalid or missing request ID');
+        requestId = randomUUID();
       }
 
       req['requestId'] = requestId;

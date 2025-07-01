@@ -19,7 +19,6 @@ import {
   ApiParam,
   ApiResponse,
   ApiBody,
-  ApiHeader,
 } from '@nestjs/swagger';
 
 /** Commons */
@@ -38,7 +37,7 @@ import { ProductDto } from './dto/product.dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Products')
 @Controller('product')
@@ -47,7 +46,7 @@ export class ProductController {
 
   @Post('/create')
   @ApiOperation({ summary: 'Create a new product' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiBody({
     type: ProductDto,
     required: true,
@@ -73,12 +72,7 @@ export class ProductController {
 
   @Get('/get-by-id/:id')
   @ApiOperation({ summary: 'Get product by ID' })
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiParam({
     name: 'id',
     type: String,
@@ -98,7 +92,7 @@ export class ProductController {
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: 'Permanently delete a product by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({
     name: 'id',
     type: String,
@@ -120,7 +114,7 @@ export class ProductController {
 
   @Put('/soft-delete/:id')
   @ApiOperation({ summary: 'Soft delete a product (sets is_active to false)' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({
     name: 'id',
     type: String,
@@ -141,7 +135,7 @@ export class ProductController {
 
   @Put('/update/:id')
   @ApiOperation({ summary: 'Update product by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: ProductDto,
