@@ -8,15 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 import { LoggerService } from '../logger';
 
 /** Constants */
-import {
-  WEB_MOBILE_APP_ID,
-  WEB_DESKTOP_APP_ID,
-  ANDROID_APP_ID,
-  IOS_APP_ID,
-  TABLET_APP_ID,
-  DESKTOP_APP_ID,
-  SWAGGER_APP_ID,
-} from '../constants';
+import { APP_IDS } from '../constants';
 
 @Injectable()
 export class RequestAppIdMiddleware implements NestMiddleware {
@@ -24,19 +16,9 @@ export class RequestAppIdMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     try {
-      const appId = req.headers['request-app-id'];
+      const appId = req.headers['request-app-id'] as string;
 
-      const VALID_APP_IDS = new Set([
-        WEB_MOBILE_APP_ID,
-        WEB_DESKTOP_APP_ID,
-        ANDROID_APP_ID,
-        IOS_APP_ID,
-        TABLET_APP_ID,
-        DESKTOP_APP_ID,
-        SWAGGER_APP_ID,
-      ]);
-
-      const validationAppId = VALID_APP_IDS.has(appId as string);
+      const validationAppId = Object.values(APP_IDS).includes(appId);
 
       if (!validationAppId) {
         throw new Error('Invalid or missing request app ID');
@@ -48,12 +30,12 @@ export class RequestAppIdMiddleware implements NestMiddleware {
     } catch (error) {
       this.logger.error(
         { request: req, error: error as Error },
-        'Failed to process request ID',
+        'Failed to process request app ID',
       );
 
       return res.status(400).json({
         statusCode: 400,
-        message: 'Missing or invalid request-id header',
+        message: 'Missing or invalid request-app-id header',
       });
     }
   }

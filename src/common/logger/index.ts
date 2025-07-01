@@ -1,2 +1,2 @@
-/** Exports Reporter */
+/** Exports Logger */
 export * from './logger.service';

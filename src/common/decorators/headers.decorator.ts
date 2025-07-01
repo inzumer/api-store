@@ -9,13 +9,11 @@ export const CommonHeaders = () =>
       description:
         "Unique app request identifier where are from, without this code don't request",
       required: true,
-      example: '123e4567-e89b-12d3-a456-426614174000',
     }),
     ApiHeader({
       name: 'request-id',
       description:
         'Unique request identifier to trace requests across services',
-      example: '123e4567-e89b-12d3-a456-426614174000',
     }),
   );
 
@@ -26,6 +24,5 @@ export const CommonHeadersWithToken = () =>
       name: 'authorization',
       description: 'Bearer token',
       required: true,
-      example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
     }),
   );
