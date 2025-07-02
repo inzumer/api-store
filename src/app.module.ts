@@ -2,7 +2,11 @@
 import { SentryModule } from '@sentry/nestjs/setup';
 
 /** Middlewares */
-import { AuthMiddleware, RequestIdMiddleware } from './common/middlewares';
+import {
+  AuthMiddleware,
+  RequestIdMiddleware,
+  RequestAppIdMiddleware,
+} from './common/middlewares';
 
 /** Dotenv */
 import * as dotenv from 'dotenv';
@@ -45,7 +49,7 @@ import { WishlistModule } from './wishlist';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(RequestIdMiddleware)
+      .apply(RequestAppIdMiddleware, RequestIdMiddleware)
       .exclude({ path: '/docs', method: RequestMethod.ALL })
       .forRoutes('*');
     consumer

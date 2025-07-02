@@ -5,7 +5,6 @@ import {
   ApiParam,
   ApiResponse,
   ApiBody,
-  ApiHeader,
 } from '@nestjs/swagger';
 
 /** Commons */
@@ -35,7 +34,7 @@ import { ReviewDto } from './dto/review.dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -44,7 +43,7 @@ export class ReviewController {
 
   @Post('/add/:id')
   @ApiOperation({ summary: 'Add a review to a product by user ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: ReviewDto,
@@ -68,29 +67,6 @@ export class ReviewController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 409,
-    description: 'User has already reviewed this product',
-    schema: {
-      example: {
-        statusCode: 409,
-        message:
-          'User "683670955dbc65f5c48871a2" has already reviewed this product.',
-        error: 'Conflict',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while adding the review',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while adding the review.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async addReview(
     @Req() req: Request,
     @Param('id') productId: string,
@@ -102,7 +78,7 @@ export class ReviewController {
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: "Remove a user's review from a product" })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: String,
@@ -123,29 +99,6 @@ export class ReviewController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Review from specified user not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message:
-          'No review found from user "683670955dbc65f5c48871a2" for this product',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while removing the review',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while removing the review.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   async removeReview(
     @Req() req: Request,
     @Param('id') productId: string,
@@ -156,12 +109,7 @@ export class ReviewController {
 
   @Get('/get-all/:id')
   @ApiOperation({ summary: 'Get all user details from reviews of a product' })
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiParam({
     name: 'id',
     type: String,
@@ -172,17 +120,6 @@ export class ReviewController {
     description: 'List of users who left a review for the product',
     schema: {
       example: [ReviewExample],
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during user creation',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving reviews.',
-        error: 'Internal Server Error',
-      },
     },
   })
   async getProductReviewUsers(

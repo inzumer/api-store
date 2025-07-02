@@ -19,7 +19,6 @@ import {
   ApiParam,
   ApiResponse,
   ApiBody,
-  ApiHeader,
 } from '@nestjs/swagger';
 
 /** Commons */
@@ -38,7 +37,7 @@ import { ProductDto } from './dto/product.dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
 
 @ApiTags('Products')
 @Controller('product')
@@ -47,7 +46,7 @@ export class ProductController {
 
   @Post('/create')
   @ApiOperation({ summary: 'Create a new product' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiBody({
     type: ProductDto,
     required: true,
@@ -67,40 +66,13 @@ export class ProductController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Category not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Category not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during product creation',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while creating the product.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   createProduct(@Req() req: Request, @Body() product: ProductDto) {
     return this.productService.createProduct(req, product);
   }
 
   @Get('/get-by-id/:id')
   @ApiOperation({ summary: 'Get product by ID' })
-  @ApiHeader({
-    name: 'request-id',
-    description: 'Unique request identifier to trace requests across services',
-    required: true,
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
+  @CommonHeaders()
   @ApiParam({
     name: 'id',
     type: String,
@@ -114,35 +86,13 @@ export class ProductController {
       example: ProductExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e9" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while retrieving product',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while retrieving the product.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   gettById(@Req() req: Request, @Param('id') id: string) {
     return this.productService.getProductById(req, id);
   }
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: 'Permanently delete a product by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({
     name: 'id',
     type: String,
@@ -158,35 +108,13 @@ export class ProductController {
       },
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e7" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while deleting product',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while deleting the product.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   deleteProduct(@Req() req: Request, @Param('id') id: string) {
     return this.productService.deleteProduct(req, id);
   }
 
   @Put('/soft-delete/:id')
   @ApiOperation({ summary: 'Soft delete a product (sets is_active to false)' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({
     name: 'id',
     type: String,
@@ -200,29 +128,6 @@ export class ProductController {
       example: SoftDeleteExample,
     },
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid product ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e7" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error while soft-deleting the product',
-    schema: {
-      example: {
-        statusCode: 500,
-        message:
-          'An unexpected error occurred while soft-deleting the product.',
-        error: 'Internal Server Error',
-      },
-    },
-  })
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async softDelete(@Req() req: Request, @Param('id') id: string) {
     return this.productService.softDeleteProduct(req, id);
@@ -230,7 +135,7 @@ export class ProductController {
 
   @Put('/update/:id')
   @ApiOperation({ summary: 'Update product by ID' })
-  @CommonHeaders()
+  @CommonHeadersWithToken()
   @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   @ApiBody({
     type: ProductDto,
@@ -252,28 +157,6 @@ export class ProductController {
     description: 'Product updated successfully',
     schema: {
       example: UpdateProductExample,
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Product not found or invalid product ID',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'Product with ID "665b98d80218f84b8a62c2e7" not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error during product update',
-    schema: {
-      example: {
-        statusCode: 500,
-        message: 'An unexpected error occurred while updating the product.',
-        error: 'Internal Server Error',
-      },
     },
   })
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))

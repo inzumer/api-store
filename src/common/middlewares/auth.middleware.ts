@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { verify } from 'jsonwebtoken';
-
-import { LoggerService } from '../logger';
-
+/** Nest */
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
+/** Express */
 import { Request, Response, NextFunction } from 'express';
+
+/** Resources jsonwebtoken */
+import { verify } from 'jsonwebtoken';
+
+/** Logger */
+import { LoggerService } from '../logger';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
