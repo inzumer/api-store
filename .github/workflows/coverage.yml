@@ -21,19 +21,26 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install dependencies
         run: npm install
 
       - name: Run tests with coverage
         run: npm run test:cov 
+
+      - name: List coverage folder
+        run: ls -l coverage
       
       - name: Read coverage percentage
         id: coverage
         run: |
-          # Extraemos el porcentaje de coverage de cobertura global
-          coverage=$(jq '.total.lines.pct' coverage-final.json)
+          if [ -f coverage/coverage-summary.json ]; then
+            coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+          else
+            echo "coverage file not found"
+            coverage=0
+          fi
           echo "coverage=$coverage" >> $GITHUB_OUTPUT
 
       - name: Comment coverage on PR
