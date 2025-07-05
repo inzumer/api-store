@@ -20,8 +20,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const comment = `📘 **Swagger Documentation Available**  
-            🔗 [View Swagger Docs](https://api-store-eqff.onrender.com/docs#/)`;
+            const comment = `📘 **Swagger Documentation Available** 🔗 [View Swagger Docs](https://api-store-eqff.onrender.com/docs#/)`;
 
             const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,

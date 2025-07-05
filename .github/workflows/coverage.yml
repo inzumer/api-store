@@ -39,8 +39,11 @@ jobs:
       - name: Read coverage percentage
         id: coverage
         run: |
+          echo "Checking coverage file..."
           if [ -f coverage/coverage-summary.json ]; then
+            cat coverage/coverage-summary.json
             coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+            echo "Found coverage: $coverage"
           else
             echo "coverage file not found"
             coverage=0
@@ -54,6 +57,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             📊 **Test Coverage Report**
-            La cobertura de líneas es de **${{ steps.coverage.outputs.coverage }}%**.
+            The overall line coverage is **${{ steps.coverage.outputs.coverage }}%**.
 
-            <!-- Este comentario es automático. -->
+            <!-- This is an automatic comment. -->
+
