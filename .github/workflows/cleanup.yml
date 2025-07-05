@@ -1,0 +1,17 @@
+name: Cleanup branches
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+      - develop
+
+jobs:
+  cleanup:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: phips28/gh-action-cleanup@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
