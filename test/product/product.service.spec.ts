@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 /** Nest */
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException, HttpException } from '@nestjs/common';
