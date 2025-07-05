@@ -33,17 +33,17 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:cov 
 
-      - name: List coverage folder
-        run: ls -l coverage
-      
+      - name: List coverage folder contents
+        run: ls -l coverage || echo "No coverage folder found"
+
+      - name: Show coverage summary content
+        run: cat coverage/coverage-summary.json || echo "coverage-summary.json not found"
+
       - name: Read coverage percentage
         id: coverage
         run: |
-          echo "Checking coverage file..."
           if [ -f coverage/coverage-summary.json ]; then
-            cat coverage/coverage-summary.json
             coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
-            echo "Found coverage: $coverage"
           else
             echo "coverage file not found"
             coverage=0
