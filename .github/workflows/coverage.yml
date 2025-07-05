@@ -56,8 +56,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            📊 **Test Coverage Report**
-            The overall line coverage is **${{ steps.coverage.outputs.coverage }}%**.
+            📊 **Test Coverage Report**: The overall line coverage is **${{ steps.coverage.outputs.coverage }}%**.
 
             <!-- This is an automatic comment. -->
 
