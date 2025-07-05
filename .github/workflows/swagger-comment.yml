@@ -6,6 +6,10 @@ on:
       - main
       - develop
 
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
   comment-swagger-docs:
     runs-on: ubuntu-latest

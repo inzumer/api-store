@@ -10,6 +10,10 @@ on:
       - main
       - develop
 
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
   test-and-comment:
     runs-on: ubuntu-latest
