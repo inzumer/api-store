@@ -1,10 +1,6 @@
 name: Post Swagger Docs Comment
 
 on:
-  workflow_run:
-    workflows: ["Coverage"]
-    types:
-      - completed
   pull_request:
     branches:
       - main
