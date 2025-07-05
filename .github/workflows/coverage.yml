@@ -1,0 +1,62 @@
+name: Coverage Check and Comment
+
+on:
+  workflow_run:
+    workflows: ["Lint"]
+    types:
+      - completed
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  test-and-comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests with coverage
+        run: npm run test:cov 
+
+      - name: List coverage folder contents
+        run: ls -l coverage || echo "No coverage folder found"
+
+      - name: Show coverage summary content
+        run: cat coverage/coverage-summary.json || echo "coverage-summary.json not found"
+
+      - name: Read coverage percentage
+        id: coverage
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+          else
+            echo "coverage file not found"
+            coverage=0
+          fi
+          echo "coverage=$coverage" >> $GITHUB_OUTPUT
+
+      - name: Comment coverage on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            📊 **Test Coverage Report**: The overall line coverage is **${{ steps.coverage.outputs.coverage }}%**.
+
+            <!-- This is an automatic comment. -->
+

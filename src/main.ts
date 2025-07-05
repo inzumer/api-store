@@ -37,4 +37,4 @@ async function bootstrap() {
   SentryInit();
 }
 
-bootstrap();
+void bootstrap();

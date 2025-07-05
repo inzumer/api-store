@@ -15,7 +15,6 @@ import {
 
 describe('ProductController', () => {
   let controller: ProductController;
-  let service: ProductService;
 
   const mockPartialProductService = {
     createProduct: jest.fn(),
@@ -34,7 +33,6 @@ describe('ProductController', () => {
     }).compile();
 
     controller = module.get<ProductController>(ProductController);
-    service = module.get<ProductService>(ProductService);
   });
 
   afterEach(() => {
@@ -52,7 +50,7 @@ describe('ProductController', () => {
         mockProductDto,
       );
 
-      expect(service.createProduct).toHaveBeenCalledWith(
+      expect(mockPartialProductService.createProduct).toHaveBeenCalledWith(
         mockRequest,
         mockProductDto,
       );
@@ -68,7 +66,7 @@ describe('ProductController', () => {
 
       const result = await controller.gettById(mockRequest, falseProductId);
 
-      expect(service.getProductById).toHaveBeenCalledWith(
+      expect(mockPartialProductService.getProductById).toHaveBeenCalledWith(
         mockRequest,
         falseProductId,
       );
@@ -86,7 +84,7 @@ describe('ProductController', () => {
         falseProductId,
       );
 
-      expect(service.deleteProduct).toHaveBeenCalledWith(
+      expect(mockPartialProductService.deleteProduct).toHaveBeenCalledWith(
         mockRequest,
         falseProductId,
       );
@@ -102,7 +100,7 @@ describe('ProductController', () => {
 
       const result = await controller.softDelete(mockRequest, falseProductId);
 
-      expect(service.softDeleteProduct).toHaveBeenCalledWith(
+      expect(mockPartialProductService.softDeleteProduct).toHaveBeenCalledWith(
         mockRequest,
         falseProductId,
       );
@@ -128,7 +126,7 @@ describe('ProductController', () => {
         updateData,
       );
 
-      expect(service.updateProduct).toHaveBeenCalledWith(
+      expect(mockPartialProductService.updateProduct).toHaveBeenCalledWith(
         mockRequest,
         falseProductId,
         updateData,
