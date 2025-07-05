@@ -40,7 +40,7 @@ import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 
 /** Logger */
-import { LoggerService } from '../common/logger';
+import { LoggerService } from '../../common/logger';
 
 @Injectable()
 export class UserService {

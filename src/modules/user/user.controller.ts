@@ -13,7 +13,7 @@ import {
   EmailExample,
   UserExample,
   PartialUserExample,
-} from '../common/examples/user.example';
+} from '../../common/examples/user.example';
 
 /** Nest */
 import {
@@ -36,7 +36,7 @@ import { UserDto, LoginUserDto, EmailUserDto } from './dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../../common/decorators';
 
 @ApiTags('Users')
 @Controller('users')

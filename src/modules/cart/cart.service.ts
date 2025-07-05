@@ -19,7 +19,7 @@ import { Model, Types } from 'mongoose';
 import { UserService } from '../user/user.service';
 
 /** Logger */
-import { LoggerService } from '../common/logger';
+import { LoggerService } from '../../common/logger';
 
 /** Express */
 import { Request } from 'express';

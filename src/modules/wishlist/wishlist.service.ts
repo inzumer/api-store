@@ -21,7 +21,7 @@ import { UserService } from '../user/user.service';
 import { Request } from 'express';
 
 /** Logger */
-import { LoggerService } from '../common/logger';
+import { LoggerService } from '../../common/logger';
 
 @Injectable()
 export class WishlistService extends UserService {

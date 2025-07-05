@@ -5,7 +5,7 @@ import { Controller, Get, Param, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 
 /** Commons */
-import { ProductExample } from '../common/examples/product.example';
+import { ProductExample } from '../../common/examples/product.example';
 
 /** Search dependencies */
 import { SearchService } from './search.service';
@@ -14,7 +14,7 @@ import { SearchService } from './search.service';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeadersWithToken } from '../common/decorators';
+import { CommonHeadersWithToken } from '../../common/decorators';
 
 @ApiTags('Search')
 @Controller('search')

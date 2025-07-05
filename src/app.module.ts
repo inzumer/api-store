@@ -18,13 +18,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
 /** Modules */
-import { CartModule } from './cart';
-import { CategoryModule } from './category';
-import { ProductModule } from './product';
-import { ReviewModule } from './review';
-import { SearchModule } from './search';
-import { UserModule } from './user';
-import { WishlistModule } from './wishlist';
+import {
+  CartModule,
+  CategoryModule,
+  ProductModule,
+  ReviewModule,
+  SearchModule,
+  UserModule,
+  WishlistModule,
+} from './modules';
 
 @Module({
   imports: [

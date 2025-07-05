@@ -27,7 +27,7 @@ import {
   ProductExample,
   SoftDeleteExample,
   UpdateProductExample,
-} from '../common/examples/product.example';
+} from '../../common/examples/product.example';
 
 /** Product dependencies */
 import { ProductService } from './product.service';
@@ -37,7 +37,7 @@ import { ProductDto } from './dto/product.dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../../common/decorators';
 
 @ApiTags('Products')
 @Controller('product')

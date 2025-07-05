@@ -24,7 +24,7 @@ import { Category, CategoryDocument } from './schema/category.schema';
 import { Request } from 'express';
 
 /** Logger */
-import { LoggerService } from '../common/logger';
+import { LoggerService } from '../../common/logger';
 
 @Injectable()
 export class CategoryService {
@@ -121,10 +121,6 @@ export class CategoryService {
         { request: req, error: error as Error },
         'Failed to retrieve active categories',
       );
-
-      if (error instanceof HttpException) {
-        throw error;
-      }
 
       throw new HttpException(
         'An unexpected error occurred while retrieving categories.',

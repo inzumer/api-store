@@ -24,7 +24,7 @@ import { ProductDto } from './dto/product.dto';
 import { Request } from 'express';
 
 /** Logger */
-import { LoggerService } from '../common/logger';
+import { LoggerService } from '../../common/logger';
 
 @Injectable()
 export class ProductService {

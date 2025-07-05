@@ -8,11 +8,11 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { CartExample } from '../common/examples/cart.example';
+import { CartExample } from '../../common/examples/cart.example';
 import {
   UserCartExample,
   UserCartEmptyExample,
-} from '../common/examples/user.example';
+} from '../../common/examples/user.example';
 
 /** Express */
 import { Request } from 'express';
@@ -24,7 +24,7 @@ import { Controller, Put, Get, Param, Body, Req } from '@nestjs/common';
 import { CartService } from './cart.service';
 
 /** Decorators */
-import { CommonHeaders } from '../common/decorators';
+import { CommonHeaders } from '../../common/decorators';
 
 @ApiTags('Cart')
 @Controller('cart')

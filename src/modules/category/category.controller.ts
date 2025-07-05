@@ -27,7 +27,7 @@ import {
   PartialCategoryExample,
   UpdateCategoryExample,
   SoftDeleteExample,
-} from '../common/examples/category.example';
+} from '../../common/examples/category.example';
 
 /** Category dependencies */
 import { CategoryService } from './category.service';
@@ -39,7 +39,7 @@ import { CategoryDto } from './dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../../common/decorators';
 
 @ApiTags('Category')
 @Controller('category')

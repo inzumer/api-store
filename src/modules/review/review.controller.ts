@@ -11,7 +11,7 @@ import {
 import {
   ProductExample,
   ReviewExample,
-} from '../common/examples/product.example';
+} from '../../common/examples/product.example';
 
 /** Nest */
 import {
@@ -34,7 +34,7 @@ import { ReviewDto } from './dto/review.dto';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeaders, CommonHeadersWithToken } from '../common/decorators';
+import { CommonHeaders, CommonHeadersWithToken } from '../../common/decorators';
 
 @ApiTags('Reviews')
 @Controller('reviews')

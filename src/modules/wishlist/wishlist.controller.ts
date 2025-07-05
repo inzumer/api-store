@@ -8,11 +8,11 @@ import {
 } from '@nestjs/swagger';
 
 /** Commons */
-import { WishlistExample } from '../common/examples/wishlist.example';
+import { WishlistExample } from '../../common/examples/wishlist.example';
 import {
   UserWishlistEmptyExample,
   UserWishlistExample,
-} from '../common/examples/user.example';
+} from '../../common/examples/user.example';
 
 /** Nest */
 import { Controller, Put, Get, Param, Body, Req } from '@nestjs/common';
@@ -24,7 +24,7 @@ import { WishlistService } from './wishlist.service';
 import { Request } from 'express';
 
 /** Decorators */
-import { CommonHeadersWithToken } from '../common/decorators';
+import { CommonHeadersWithToken } from '../../common/decorators';
 
 @ApiTags('Wishlist')
 @Controller('wishlist')

@@ -16,7 +16,7 @@ import { isMongoId } from 'class-validator';
 import { Request } from 'express';
 
 /** Logger */
-import { LoggerService } from '../common/logger';
+import { LoggerService } from '../../common/logger';
 
 export class SearchService {
   logger = new LoggerService('SearchService');
@@ -123,7 +123,9 @@ export class SearchService {
         throw new NotFoundException('Invalid user ID');
       }
 
-      return this.productModel.find({ owner: userId }).exec();
+      const products = this.productModel.find({ owner: userId }).exec();
+
+      return products;
     } catch (error) {
       this.logger.error(
         { request: req, error: error as Error },

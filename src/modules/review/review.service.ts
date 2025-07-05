@@ -21,7 +21,7 @@ import { ReviewDto } from './dto/review.dto';
 import { Request } from 'express';
 
 /** Logger */
-import { LoggerService } from '../common/logger';
+import { LoggerService } from '../../common/logger';
 
 @Injectable()
 export class ReviewService {
@@ -148,11 +148,13 @@ export class ReviewService {
     try {
       const product = await this.productService.getProductById(req, productId);
 
+      const beforeCount = product.reviews.length;
+
       const filteredReviews = product.reviews.filter(
         (review) => review.user.toString() !== userId.toString(),
       );
 
-      if (!filteredReviews) {
+      if (beforeCount === filteredReviews.length) {
         throw new NotFoundException(
           `No review found from user "${userId}" for this product`,
         );
