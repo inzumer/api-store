@@ -33,7 +33,7 @@ jobs:
         id: coverage
         run: |
           # Extraemos el porcentaje de coverage de cobertura global
-          coverage=$(jq '.total.lines.pct' coverage-summary.json)
+          coverage=$(jq '.total.lines.pct' coverage-final.json)
           echo "coverage=$coverage" >> $GITHUB_OUTPUT
 
       - name: Comment coverage on PR
